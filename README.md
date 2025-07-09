@@ -4,19 +4,31 @@ Simple membership portal for the Cassandra Labs Assocation
 
 ## TODO 
 
-- [ ] Finish the wizard’s middle steps.
-    – Copy the STEP 2 → STEP 6 blocks from the earlier snippet (they were unchanged).
-    – Drop in a one-line progress bar if you want visual polish.
+- [ ] Finish the wizard
+    - [ ] searchable physical address
+    - [ ] link to Cassandra website in Mission Affirmation 
+        - [ ] also include the paragraph from the by-laws
+    - [ ] Explain participation areas
+- [ ] Account creation
+    - this should include Supabase Auth 
+    - this also means we have to create a page for stuff
+- [ ] Meeting prefrences 
+    - [ ] Live Zoom vs. Watch Recording should be a dropdown 
+    - [ ] Insetad of preferred Timezone, let's link to When2Meet
+- [ ] Optional nominations & agenda ideas
+    - [ ] Add conditional check on David and other board candidates
+        - 'As Member Liaison, I’ll be the bridge between our growing community and Cassandra’s mission to build public-good infrastructure—from open-source prediction markets to fintech tools that widen access to finance. I thrive on greeting new members, turning our charitable, educational, and scientific goals into clear first steps, and following through until everyone feels heard. When feedback rolls in, I act fast—updating docs, scheduling live Q&As, and looping in the right experts—so momentum never stalls. Empowering volunteers to contribute their best work isn’t a side task for me; it’s how I’ll keep Cassandra’s Association vibrant and moving forward.'
+    - [ ] Voting on by-laws
+    - [ ] Add agenda so that people can vote on it
+        - [ ] Ranked Voting on the projects
+    - [ ] Questions for Jacob and I to answer
 - [ ] Send the welcome email + .ics invite.
     – In stripe-webhook/route.js after you mark the row active, call your mailer (Resend, Postmark, etc.) and attach a static public/annual_meeting.ics.
     – That keeps the annual-meeting notice automatic and NCUA-compliant.
-- [ ] Tighten Supabase security.
-    – The wizard runs in the browser, so it should import Supabase with the anon key only.
-    – Keep the service_role key exclusively inside the API routes (create-checkout-session and stripe-webhook).
-- [ ] Copy & marketing polish.
-    – Replace the placeholder root page with a short intro + Join Now button linking to /membership.
-    – Paste the membership-page copy we drafted earlier into Squarespace so the public site and the portal tell the same story.
 - [ ] QA pass.
     – Test the ?coupon=DUESPAID flow once (it should zero-out the charge).
     – Run one paid $1 test and confirm Stripe → Supabase → email all fire.
     – Kill one join halfway through Checkout and make sure the “pending” draft row is harmless.
+- [ ] Membership Portal
+    - enable people to modify their answers from the portal 
+    - eventually we can add the rest of the information

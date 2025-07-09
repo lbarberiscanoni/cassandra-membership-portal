@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -181,7 +182,37 @@ export default function MembershipWizard() {
           <FieldErr errors={errors} name="meetingPref" />
         </section>
 
-        {/* ---------- 5 · VOTING + SIGNATURE ---------- */}
+        {/* ---------- 5 · NOMINATIONS & AGENDA ---------- */}
+        <section className="pt-6">
+          <h2 className="text-xl font-medium mb-4">
+            5 Optional nominations &amp; agenda ideas
+          </h2>
+
+          {/* nominate someone else */}
+          <div className="mb-4">
+            <label className="block font-medium mb-1">
+              Nominate a board candidate (optional)
+            </label>
+            <Input
+              placeholder="e.g. Jane Smith"
+              {...register("proposedCandidate")}
+            />
+          </div>
+
+          {/* agenda / motions */}
+          <div>
+            <label className="block font-medium mb-1">
+              Agenda items or motions you’d like discussed (optional)
+            </label>
+            <Textarea
+              rows={3}
+              placeholder="Your suggestions…"
+              {...register("agendaItems")}
+            />
+          </div>
+        </section>
+
+        {/* ---------- 6 · VOTING + SIGNATURE ---------- */}
         <section>
           <h2 className="text-xl font-medium mb-4">
             5 Voting duty & signature
