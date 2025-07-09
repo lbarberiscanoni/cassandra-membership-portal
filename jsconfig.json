@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",          // project root
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]       // so "@/lib/stripe" → "src/lib/stripe.js"
+      "@/*": ["src/*"]
     }
   }
 }
