@@ -1,141 +1,235 @@
+/* src/app/membership/Wizard.jsx */
 "use client";
 
-export const dynamic = "force-dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm, Controller } from "react-hook-form";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSearchParams, useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group";
 
-/* ---------- tiny helper ---------- */
-function FieldError({ errors, name }) {
-  return errors[name] ? (
+/* helper for error text */
+const FieldErr = ({ errors, name }) =>
+  errors[name] ? (
     <p className="mt-1 text-sm text-red-600">{errors[name].message}</p>
   ) : null;
-}
 
-export default function Membership() {
+export default function MembershipWizard() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
 
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const coupon = searchParams.get("coupon");
-  const [step, setStep] = useState(1);
-
-  const next = () => setStep((s) => s + 1);
-  const back = () => setStep((s) => s - 1);
+  const coupon = useSearchParams().get("coupon");
 
   const onSubmit = async (data) => {
-    const res = await fetch("/api/create-checkout-session", {
+    const r = await fetch("/api/create-checkout-session", {
       method: "POST",
       body: JSON.stringify({ ...data, coupon }),
     });
-    const { url } = await res.json();
+    const { url } = await r.json();
     router.push(url);
   };
 
   return (
     <main className="mx-auto max-w-xl px-6 py-10">
-      <h1 className="text-3xl font-semibold mb-8">
-        Cassandra Membership Sign-up
+      <h1 className="text-3xl font-semibold mb-6">
+        Cassandra Membership Form
       </h1>
 
-      <p className="text-gray-500 mb-6">Step {step} / 6</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+        {/* ---------- 1 · IDENTITY ---------- */}
+        <section>
+          <h2 className="text-xl font-medium mb-4">1 Identity</h2>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* ---------------- STEP 1 ---------------- */}
-        {step === 1 && (
-          <>
-            <div className="mb-4">
-              <label className="block font-medium mb-1">Legal name</label>
-              <input
-                {...register("name", { required: "Legal name required" })}
-                type="text"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              />
-              <FieldError errors={errors} name="name" />
-            </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Legal name</label>
+            <Input {...register("name", { required: "Required" })} />
+            <FieldErr errors={errors} name="name" />
+          </div>
 
-            <div className="mb-4">
-              <label className="block font-medium mb-1">Email</label>
-              <input
-                {...register("email", {
-                  required: "Email required",
-                  pattern: { value: /^\S+@\S+$/, message: "Invalid email" },
-                })}
-                type="email"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              />
-              <FieldError errors={errors} name="email" />
-            </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Email</label>
+            <Input
+              type="email"
+              {...register("email", {
+                required: "Required",
+                pattern: { value: /^\S+@\S+$/, message: "Invalid email" },
+              })}
+            />
+            <FieldErr errors={errors} name="email" />
+          </div>
 
-            <div className="mb-4">
-              <label className="block font-medium mb-1">Phone (optional)</label>
-              <input
-                {...register("phone")}
-                type="tel"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              />
-            </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Phone (optional)</label>
+            <Input {...register("phone")} />
+          </div>
 
-            <div className="mb-4">
-              <label className="block font-medium mb-1">Physical address</label>
-              <input
-                {...register("address", { required: "Address required" })}
-                type="text"
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              />
-              <FieldError errors={errors} name="address" />
-            </div>
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Physical address</label>
+            <Input
+              {...register("address", { required: "Required" })}
+            />
+            <FieldErr errors={errors} name="address" />
+          </div>
 
-            <label className="flex items-center mb-6 space-x-2">
-              <input
-                type="checkbox"
-                {...register("isAdult", { required: "Required" })}
-              />
-              <span>I am 18 years or older</span>
+          <Controller
+            control={control}
+            name="isAdult"
+            rules={{ required: "Required" }}
+            render={({ field }) => (
+              <label className="inline-flex items-center gap-2">
+                <Checkbox
+                  id="isAdult"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+                <span>I am 18 years or older</span>
+              </label>
+            )}
+          />
+          <FieldErr errors={errors} name="isAdult" />
+        </section>
+
+        {/* ---------- 2 · MISSION ---------- */}
+        <section>
+          <h2 className="text-xl font-medium mb-4">2 Mission affirmation</h2>
+
+          <Controller
+            control={control}
+            name="mission"
+            rules={{ required: "Required" }}
+            render={({ field }) => (
+              <label className="inline-flex items-center gap-2">
+                <Checkbox
+                  id="mission"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+                <span>
+                  I support Cassandra’s charitable, educational & scientific
+                  mission
+                </span>
+              </label>
+            )}
+          />
+          <FieldErr errors={errors} name="mission" />
+        </section>
+
+        {/* ---------- 3 · PARTICIPATION ---------- */}
+        <section>
+          <h2 className="text-xl font-medium mb-4">3 Participation areas</h2>
+
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {["Research", "Open-source dev", "Volunteer committees"].map((opt) => (
+              <label key={opt} className="inline-flex items-center gap-2">
+                <Checkbox
+                  id={opt}
+                  value={opt}
+                  {...register("participation")}
+                />
+                <span>{opt}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+
+        {/* ---------- 4 · MEETING PREFS ---------- */}
+        <section>
+          <h2 className="text-xl font-medium mb-4">4 Meeting preferences</h2>
+
+          <div className="mb-4">
+            <label className="block font-medium mb-1">
+              Preferred timezone (e.g. PST, UTC+1)
             </label>
-            <FieldError errors={errors} name="isAdult" />
-          </>
-        )}
+            <Input
+              {...register("timezone", { required: "Required" })}
+            />
+            <FieldErr errors={errors} name="timezone" />
+          </div>
 
-        {/* ------- keep the remaining steps exactly as before ------- */}
-        {/* …… STEP 2 through STEP 6 code unchanged …… */}
+          <Controller
+            control={control}
+            name="meetingPref"
+            rules={{ required: "Required" }}
+            render={({ field }) => (
+              <RadioGroup
+                value={field.value}
+                onValueChange={field.onChange}
+                className="space-y-1"
+              >
+                {["Live Zoom", "Watch recording"].map((opt) => (
+                  <label
+                    key={opt}
+                    className="inline-flex items-center gap-2"
+                    htmlFor={opt}
+                  >
+                    <RadioGroupItem value={opt} id={opt} />
+                    <span>{opt}</span>
+                  </label>
+                ))}
+              </RadioGroup>
+            )}
+          />
+          <FieldErr errors={errors} name="meetingPref" />
+        </section>
 
-        {/* ---------------- NAV BUTTONS ---------------- */}
-        <div className="mt-8 flex justify-between">
-          {step > 1 && (
-            <button
-              type="button"
-              onClick={back}
-              className="rounded border border-gray-400 px-4 py-2"
-            >
-              Back
-            </button>
-          )}
+        {/* ---------- 5 · VOTING + SIGNATURE ---------- */}
+        <section>
+          <h2 className="text-xl font-medium mb-4">
+            5 Voting duty & signature
+          </h2>
 
-          {step < 6 && (
-            <button
-              type="button"
-              onClick={() => handleSubmit(() => next())()}
-              className="ml-auto rounded bg-blue-600 px-6 py-2 text-white"
-            >
-              Next
-            </button>
-          )}
+          <Controller
+            control={control}
+            name="votingDuty"
+            rules={{ required: "Required" }}
+            render={({ field }) => (
+              <label className="inline-flex items-center gap-2 mb-2">
+                <Checkbox
+                  id="votingDuty"
+                  checked={field.value ?? false}
+                  onCheckedChange={field.onChange}
+                />
+                <span>
+                  I understand each member has one vote and must participate in
+                  annual meetings
+                </span>
+              </label>
+            )}
+          />
+          <FieldErr errors={errors} name="votingDuty" />
 
-          {step === 6 && (
-            <button
-              type="submit"
-              className="ml-auto rounded bg-green-600 px-6 py-2 text-white"
-            >
-              Pay $1
-            </button>
-          )}
-        </div>
+          <div className="mt-4">
+            <label className="block font-medium mb-1">Signature</label>
+            <Input
+              {...register("signature", { required: "Required" })}
+            />
+            <FieldErr errors={errors} name="signature" />
+          </div>
+        </section>
+
+        {/* ---------- PAY ---------- */}
+        <section className="pt-4">
+          <p className="mb-4">
+            Annual dues: <strong>$1.00</strong>{" "}
+            {coupon && (
+              <span className="text-green-600">
+                (coupon <code>{coupon}</code> will apply)
+              </span>
+            )}
+          </p>
+          <Button type="submit" className="bg-green-600 hover:bg-green-700">
+            Pay&nbsp;$1
+          </Button>
+        </section>
       </form>
     </main>
   );
