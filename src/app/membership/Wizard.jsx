@@ -19,6 +19,13 @@ import {
   RadioGroupItem,
 } from "@/components/ui/radio-group";
 import AddressInput from "@/components/AddressInput";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 /* helper for error text */
 const FieldErr = ({ errors, name }) =>
@@ -32,7 +39,13 @@ export default function MembershipWizard() {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({ mode: "onBlur" });
+  } = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      meetingPref: "Watch recording",   // ← new line
+    },
+  });
+
 
   const router = useRouter();
   const coupon = useSearchParams().get("coupon");
@@ -196,40 +209,41 @@ export default function MembershipWizard() {
           <section>
             <h2 className="text-xl font-medium mb-4">4 Meeting preferences</h2>
 
-            <div className="mb-4">
-              <label className="block font-medium mb-1">
-                Preferred timezone (e.g. PST, UTC+1)
-              </label>
-              <Input
-                {...register("timezone", { required: "Required" })}
-              />
-              <FieldErr errors={errors} name="timezone" />
-            </div>
-
+            {/* dropdown with Watch recording pre-selected */}
             <Controller
               control={control}
               name="meetingPref"
               rules={{ required: "Required" }}
               render={({ field }) => (
-                <RadioGroup
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="space-y-1"
-                >
-                  {["Live Zoom", "Watch recording"].map((opt) => (
-                    <label
-                      key={opt}
-                      className="inline-flex items-center gap-2"
-                      htmlFor={opt}
-                    >
-                      <RadioGroupItem value={opt} id={opt} />
-                      <span>{opt}</span>
-                    </label>
-                  ))}
-                </RadioGroup>
+                <Select defaultValue={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choose how you'll attend" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Live Zoom">Live Zoom</SelectItem>
+                    <SelectItem value="Watch recording">Watch recording</SelectItem>
+                  </SelectContent>
+                </Select>
               )}
             />
             <FieldErr errors={errors} name="meetingPref" />
+
+            {/* call-out box for When2Meet */}
+            <div className="mt-6 border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+              <p className="text-sm text-gray-800">
+                <strong>Help us schedule!</strong>  Mark the times you
+                could attend the Zoom in our&nbsp;
+                <a
+                  href="https://www.when2meet.com/?#####"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium underline text-blue-700"
+                >
+                  When2Meet poll
+                </a>
+                . (This takes 30 seconds and really boosts turnout.)
+              </p>
+            </div>
           </section>
 
           {/* ---------- 5 · NOMINATIONS & AGENDA ---------- */}
