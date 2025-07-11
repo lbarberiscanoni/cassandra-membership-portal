@@ -38,6 +38,7 @@ export default function MembershipWizard() {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
@@ -249,18 +250,58 @@ export default function MembershipWizard() {
           {/* ---------- 5 · NOMINATIONS & AGENDA ---------- */}
           <section className="pt-6">
             <h2 className="text-xl font-medium mb-4">
-              5 Optional nominations &amp; agenda ideas
+              5 Remote Voting &amp; Agenda Ideas
             </h2>
+
+
 
             {/* nominate someone else */}
             <div className="mb-4">
               <label className="block font-medium mb-1">
-                Nominate a board candidate (optional)
+                Vote on a Member Liason to represent you
               </label>
-              <Input
-                placeholder="e.g. Jane Smith"
-                {...register("proposedCandidate")}
+              <Controller
+                control={control}
+                name="board_choice"
+                defaultValue="David"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <>
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="space-y-3"
+                    >
+                      {/* Option 1 — David */}
+                      <label className="flex items-start gap-2">
+                        <RadioGroupItem value="David" id="david" />
+                        <span>
+                          <strong>David Moore</strong>
+                          <p className="mt-1 text-gray-600 text-xs leading-snug">
+                            “As Member Liaison, I’ll be the bridge between our growing community and Cassandra’s mission to build public-good infrastructure—from open-source prediction markets to fintech tools that widen access to finance. I thrive on greeting new members, turning our charitable, educational, and scientific goals into clear first steps, and following through until everyone feels heard. When feedback rolls in, I act fast—updating docs, scheduling live Q&As, and looping in the right experts—so momentum never stalls. Empowering volunteers to contribute their best work isn’t a side task for me; it’s how I’ll keep Cassandra’s Association vibrant and moving forward.'”
+                          </p>
+                        </span>
+                      </label>
+
+                      {/* Option 2 — Write-in */}
+                      <label className="flex items-start gap-2">
+                        <RadioGroupItem value="write-in" id="writein" />
+                        <span>Write-in candidate</span>
+                      </label>
+                    </RadioGroup>
+
+                    {/* Conditional text box shows only if “write-in” selected */}
+                    {watch("board_choice") === "write-in" && (
+                      <Input
+                        className="mt-2"
+                        placeholder="Type full name"
+                        {...register("write_in", { required: "Name required" })}
+                      />
+                    )}
+                  </>
+                )}
               />
+              <FieldErr errors={errors} name="write_in" />
             </div>
 
             {/* agenda / motions */}

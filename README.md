@@ -16,7 +16,7 @@ Simple membership portal for the Cassandra Labs Assocation
     - [x] Live Zoom vs. Watch Recording should be a dropdown 
     - [x] Insetad of preferred Timezone, let's link to When2Meet
 - [ ] Optional nominations & agenda ideas
-    - [ ] Add conditional check on David and other board candidates
+    - [x] Add conditional check on David and other board candidates
         - 'As Member Liaison, I’ll be the bridge between our growing community and Cassandra’s mission to build public-good infrastructure—from open-source prediction markets to fintech tools that widen access to finance. I thrive on greeting new members, turning our charitable, educational, and scientific goals into clear first steps, and following through until everyone feels heard. When feedback rolls in, I act fast—updating docs, scheduling live Q&As, and looping in the right experts—so momentum never stalls. Empowering volunteers to contribute their best work isn’t a side task for me; it’s how I’ll keep Cassandra’s Association vibrant and moving forward.'
     - [ ] Voting on by-laws
     - [ ] Add agenda so that people can vote on it
