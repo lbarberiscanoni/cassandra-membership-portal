@@ -5,9 +5,9 @@ Simple membership portal for the Cassandra Labs Assocation
 ## TODO 
 
 - [ ] Finish the wizard
-    - [ ] searchable physical address
-    - [ ] link to Cassandra website in Mission Affirmation 
-        - [ ] also include the paragraph from the by-laws
+    - [x] searchable physical address
+    - [x] link to Cassandra website in Mission Affirmation 
+        - [x] also include the paragraph from the by-laws
     - [ ] Explain participation areas
 - [ ] Account creation
     - this should include Supabase Auth 

@@ -104,7 +104,7 @@ export default function MembershipWizard() {
           <FieldErr errors={errors} name="isAdult" />
         </section>
 
-        {/* ---------- 2 · MISSION ---------- */}
+        {/* ---------- 2 · MISSION AFFIRMATION ---------- */}
         <section>
           <h2 className="text-xl font-medium mb-4">2 Mission affirmation</h2>
 
@@ -113,15 +113,34 @@ export default function MembershipWizard() {
             name="mission"
             rules={{ required: "Required" }}
             render={({ field }) => (
-              <label className="inline-flex items-center gap-2">
+              <label className="inline-flex items-start gap-2">
                 <Checkbox
                   id="mission"
                   checked={field.value ?? false}
                   onCheckedChange={field.onChange}
                 />
                 <span>
-                  I support Cassandra’s charitable, educational & scientific
-                  mission
+                  I have read and support the&nbsp;
+                  <a
+                    href="https://cassandralabs.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    Cassandra Labs mission
+                  </a>
+                  .
+                  <p className="mt-1 text-xs text-gray-600">
+                    <strong>By-laws&nbsp;Art.&nbsp;I § 1&nbsp;&amp;&nbsp;§ 2&nbsp;excerpt:</strong><br />
+                    Cassandra Labs is organized exclusively for charitable, educational,
+                    and scientific purposes within the meaning of&nbsp;§ 501(c)(3) of the
+                    Internal Revenue Code, including making distributions to qualified
+                    organizations. To advance these purposes, Cassandra Labs may design,
+                    build, and steward public-goods infrastructure that harnesses
+                    collective intelligence and conduct mechanism-design research for the
+                    benefit of its Members and the public — all in compliance with
+                    § 501(c)(3) and other applicable law.
+                  </p>
                 </span>
               </label>
             )}
