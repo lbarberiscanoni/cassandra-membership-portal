@@ -304,6 +304,40 @@ export default function MembershipWizard() {
               <FieldErr errors={errors} name="write_in" />
             </div>
 
+            {/* by-laws yes/no */}
+            <div className="mt-6">
+              <label className="block font-medium mb-1">
+                Ratify&nbsp;
+                <a
+                  href="https://docs.google.com/document/d/1klc3TzxREA3fRNKFsFj29u6gjFHXAOKUM8-OnpxY1Dw/edit?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  revised by-laws
+                </a>
+                ?
+              </label>
+
+              <Controller
+                control={control}
+                name="bylaws_yesno"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Choose one" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes – adopt</SelectItem>
+                      <SelectItem value="no">No – reject</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              <FieldErr errors={errors} name="bylaws_yesno" />
+            </div>
+
             {/* agenda / motions */}
             <div>
               <label className="block font-medium mb-1">
@@ -320,7 +354,7 @@ export default function MembershipWizard() {
           {/* ---------- 6 · VOTING + SIGNATURE ---------- */}
           <section>
             <h2 className="text-xl font-medium mb-4">
-              5 Voting duty & signature
+              6 Voting duty & signature
             </h2>
 
             <Controller
