@@ -12,6 +12,7 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/ui/radio-group";
+import AddressInput from "@/components/AddressInput";
 
 /* helper for error text */
 const FieldErr = ({ errors, name }) =>
@@ -73,12 +74,16 @@ export default function MembershipWizard() {
             <Input {...register("phone")} />
           </div>
 
+          {/* Physical address */}
           <div className="mb-4">
             <label className="block font-medium mb-1">Physical address</label>
-            <Input
-              {...register("address", { required: "Required" })}
+            <Controller
+              control={control}
+              name="streetAddress"
+              rules={{ required: "Required" }}
+              render={({ field }) => <AddressInput field={field} />}
             />
-            <FieldErr errors={errors} name="address" />
+            <FieldErr errors={errors} name="streetAddress" />
           </div>
 
           <Controller
