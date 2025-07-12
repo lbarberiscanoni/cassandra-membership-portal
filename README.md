@@ -19,8 +19,8 @@ Simple membership portal for the Cassandra Labs Assocation
     - [x] Add conditional check on David and other board candidates
         - 'As Member Liaison, I’ll be the bridge between our growing community and Cassandra’s mission to build public-good infrastructure—from open-source prediction markets to fintech tools that widen access to finance. I thrive on greeting new members, turning our charitable, educational, and scientific goals into clear first steps, and following through until everyone feels heard. When feedback rolls in, I act fast—updating docs, scheduling live Q&As, and looping in the right experts—so momentum never stalls. Empowering volunteers to contribute their best work isn’t a side task for me; it’s how I’ll keep Cassandra’s Association vibrant and moving forward.'
     - [x] Voting on by-laws
-    - [ ] Add agenda so that people can vote on it
-        - [ ] Ranked Voting on the projects
+    - [x] Add agenda so that people can vote on it
+        - [x] Ranked Voting on the projects
     - [ ] Questions for Jacob and I to answer
 - [ ] Send the welcome email + .ics invite.
     – In stripe-webhook/route.js after you mark the row active, call your mailer (Resend, Postmark, etc.) and attach a static public/annual_meeting.ics.

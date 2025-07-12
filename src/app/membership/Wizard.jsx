@@ -355,6 +355,18 @@ export default function MembershipWizard() {
               </p>
             </div>
 
+            {/* questions for the founders */}
+            <div className="mt-6">
+              <label className="block font-medium mb-1">
+                Questions for Jacob &amp; Lorenzo (optional)
+              </label>
+              <Textarea
+                rows={3}
+                placeholder="Ask us anything about Cassandra. We'll answer in the Q&A"
+                {...register("member_questions")}
+              />
+            </div>
+
             {/* agenda / motions */}
             <div>
               <label className="block font-medium mb-1">
