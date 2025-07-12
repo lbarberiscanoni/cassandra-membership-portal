@@ -338,10 +338,27 @@ export default function MembershipWizard() {
               <FieldErr errors={errors} name="bylaws_yesno" />
             </div>
 
+            {/* ranked-choice agenda poll */}
+            <div className="mt-6 border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded">
+              <p className="text-sm">
+                <strong>Help prioritize our 2025 research projects&nbsp;→</strong>&nbsp;
+                Cast your ranked-choice vote in the&nbsp;
+                <a
+                  href="https://rankedchoices.com/cassandragenda"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-indigo-700 font-medium"
+                >
+                  Agenda Poll
+                </a>
+                . No login required—takes about 30&nbsp;seconds.
+              </p>
+            </div>
+
             {/* agenda / motions */}
             <div>
               <label className="block font-medium mb-1">
-                Agenda items or motions you’d like discussed (optional)
+                Agenda items or motions you’d like to propose (optional)
               </label>
               <Textarea
                 rows={3}
