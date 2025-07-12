@@ -18,17 +18,17 @@ Simple membership portal for the Cassandra Labs Assocation
     - [x] Voting on by-laws
     - [x] Add agenda so that people can vote on it
         - [x] Ranked Voting on the projects
-    - [x] Questions for Jacob and I to answer
-- [ ] Account creation
-    - this should include Supabase Auth 
-    - this also means we have to create a page for stuff
-- [ ] Send the welcome email + .ics invite.
-    – In stripe-webhook/route.js after you mark the row active, call your mailer (Resend, Postmark, etc.) and attach a static public/annual_meeting.ics.
-    – That keeps the annual-meeting notice automatic and NCUA-compliant.
-- [ ] QA pass.
+    - [x] Questions for Jacob and I to answer 
+- [ ] Membership Portal
+    - [ ] Backend Schema
+    - Auth with Supabase
+    - enable people to modify their answers from the portal 
+    - eventually we can add the rest of the information
+- [ ] Test Stripe Dues
     – Test the ?coupon=DUESPAID flow once (it should zero-out the charge).
     – Run one paid $1 test and confirm Stripe → Supabase → email all fire.
     – Kill one join halfway through Checkout and make sure the “pending” draft row is harmless.
-- [ ] Membership Portal
-    - enable people to modify their answers from the portal 
-    - eventually we can add the rest of the information
+- [ ] Send the welcome email + .ics invite.
+    – In stripe-webhook/route.js after you mark the row active, call your mailer (Resend, Postmark, etc.) and attach a static public/annual_meeting.ics.
+    – That keeps the annual-meeting notice automatic and NCUA-compliant.
+
