@@ -170,7 +170,12 @@ export default function MembershipWizard() {
 
           {/* ---------- 3 · PARTICIPATION ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">3 Participation areas</h2>
+            <h2 className="text-xl font-medium mb-2">3 Participation areas</h2>
+
+            <p className="mb-4 text-sm text-gray-700">
+              Pick any ways you might like to get involved—nothing is binding, it just
+              helps us send the right invitations and resources.
+            </p>
 
             {[
               {
@@ -185,18 +190,18 @@ export default function MembershipWizard() {
                 label: "Volunteer committees",
                 tip: "Help with outreach, compliance, grants, or events.",
               },
+              {
+                label: "Regular member",            // ← new option
+                tip: "Stay informed and vote—no ongoing volunteer duties.",
+              },
             ].map(({ label, tip }) => (
               <div key={label} className="flex items-center gap-2 mb-2">
                 <Checkbox id={label} value={label} {...register("participation")} />
-                <label htmlFor={label} className="font-medium">
-                  {label}
-                </label>
+                <label htmlFor={label} className="font-medium">{label}</label>
 
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <span className="cursor-help text-gray-400 inline-block align-middle">
-                      &#9432;
-                    </span>
+                    <span className="cursor-help text-gray-400">&#9432;</span>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-xs text-sm">
                     {tip}
@@ -205,6 +210,7 @@ export default function MembershipWizard() {
               </div>
             ))}
           </section>
+
 
           {/* ---------- 4 · MEETING PREFS ---------- */}
           <section>
@@ -365,7 +371,7 @@ export default function MembershipWizard() {
                 placeholder="Ask us anything about Cassandra. We'll answer in the Q&A"
                 {...register("member_questions")}
               />
-            </div>
+            </div>  
 
             {/* agenda / motions */}
             <div>
