@@ -66,12 +66,15 @@ export default function MembershipWizard() {
         return;
       }
 
-      router.push(body.url);           // Stripe Checkout
+      // during testing, body.url may be undefined—so default to /thanks
+      const redirectUrl = body.url ?? "/thanks";
+      router.push(redirectUrl);
     } catch (err) {
       console.error(err);
       alert("Network error: " + err.message);
     }
   };
+
 
 
   return (

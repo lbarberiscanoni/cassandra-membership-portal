@@ -30,7 +30,7 @@ export async function POST(req) {
         status: "pending",
       })
       .select()
-      .single();                                  // returns { …row… }
+      .single();                                             // returns { …row… }
 
     if (error) {
       console.error("Supabase insert error:", error);
@@ -42,18 +42,17 @@ export async function POST(req) {
 
 
     /* 2. Create Stripe Checkout session */
-    // const session = await stripe.checkout.sessions.create({
-    //   mode:            "payment",
-    //   customer_email:  data.email,
-    //   line_items:      [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
-    //   discounts:       data.coupon ? [{ coupon: data.coupon }] : undefined,
-    //   metadata:        { supabase_id: draft.id },   // link row for webhook
-    //   success_url:     `${process.env.NEXT_PUBLIC_BASE_URL}/thanks`,
-    //   cancel_url:      `${process.env.NEXT_PUBLIC_BASE_URL}/membership?canceled=1`,
-    // });
+    const session = await stripe.checkout.sessions.create({
+      mode:            "payment",
+      customer_email:  data.email,
+      line_items:      [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      discounts:       data.coupon ? [{ coupon: data.coupon }] : undefined,
+      metadata:        { supabase_id: draft.id },   // link row for webhook
+      success_url:     `${process.env.NEXT_PUBLIC_BASE_URL}/thanks`,
+      cancel_url:      `${process.env.NEXT_PUBLIC_BASE_URL}/membership?canceled=1`,
+    });
 
-      // return Response.json({ url: session.url });
-      return Response.json({ ok: true, memberId: draft.id });
+      return Response.json({ url: session.url });
   } catch (err) {
     console.error("Unhandled error:", err);
     return Response.json({ error: err.message }, { status: 500 });
