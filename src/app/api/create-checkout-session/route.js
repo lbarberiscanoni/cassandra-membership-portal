@@ -15,7 +15,11 @@ export async function POST(req) {
         phone:           data.phone,               // optional
         is_adult:        data.isAdult,
         mission:         data.mission,
-        participation:   data.participation ?? [], // text[]
+        participation: Array.isArray(data.participation)
+          ? data.participation
+          : data.participation
+          ? [data.participation]
+          : [],
         meeting_pref:    data.meetingPref,
 
         /* remote ballot */

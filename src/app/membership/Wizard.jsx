@@ -44,6 +44,8 @@ export default function MembershipWizard() {
     mode: "onBlur",
     defaultValues: {
       meetingPref: "Watch recording",   // ← new line
+      board_choice:  "David",  // you already have
+      bylaws_yesno:  "yes",
     },
   });
 
@@ -52,6 +54,7 @@ export default function MembershipWizard() {
   const coupon = useSearchParams().get("coupon");
 
   const onSubmit = async (data) => {
+    console.log("🔥 onSubmit called with:", data);
     try {
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
