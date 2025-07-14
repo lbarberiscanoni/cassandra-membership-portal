@@ -20,7 +20,7 @@ Simple membership portal for the Cassandra Labs Assocation
         - [x] Ranked Voting on the projects
     - [x] Questions for Jacob and I to answer 
 - [ ] Membership Portal
-    - [ ] Backend Schema
+    - [x] Backend Schema
     - Auth with Supabase
     - enable people to modify their answers from the portal 
     - eventually we can add the rest of the information

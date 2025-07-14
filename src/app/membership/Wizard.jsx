@@ -38,7 +38,7 @@ export default function MembershipWizard() {
     register,
     handleSubmit,
     control,
-    watch,
+    watch,        
     formState: { errors },
   } = useForm({
     mode: "onBlur",
@@ -52,13 +52,27 @@ export default function MembershipWizard() {
   const coupon = useSearchParams().get("coupon");
 
   const onSubmit = async (data) => {
-    const r = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      body: JSON.stringify({ ...data, coupon }),
-    });
-    const { url } = await r.json();
-    router.push(url);
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, coupon }),
+      });
+
+      const body = await res.json();
+
+      if (!res.ok) {
+        alert("Signup failed: " + (body.error || "unknown error"));
+        return;
+      }
+
+      router.push(body.url);           // Stripe Checkout
+    } catch (err) {
+      console.error(err);
+      alert("Network error: " + err.message);
+    }
   };
+
 
   return (
     <main className="mx-auto max-w-xl px-6 py-10">
