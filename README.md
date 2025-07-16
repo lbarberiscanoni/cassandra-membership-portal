@@ -24,10 +24,9 @@ Simple membership portal for the Cassandra Labs Assocation
     - Auth with Supabase
     - enable people to modify their answers from the portal 
     - eventually we can add the rest of the information
-- [ ] Test Stripe Dues
+- [x] Test Stripe Dues
     – Test the ?coupon=DUESPAID flow once (it should zero-out the charge).
     – Run one paid $1 test and confirm Stripe → Supabase → email all fire.
-    – Kill one join halfway through Checkout and make sure the “pending” draft row is harmless.
 - [ ] Send the welcome email + .ics invite.
     – In stripe-webhook/route.js after you mark the row active, call your mailer (Resend, Postmark, etc.) and attach a static public/annual_meeting.ics.
     – That keeps the annual-meeting notice automatic and NCUA-compliant.

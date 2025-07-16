@@ -260,7 +260,7 @@ export default function MembershipWizard() {
                 <strong>Help us schedule!</strong>  Mark the times you
                 could attend the Zoom in our&nbsp;
                 <a
-                  href="https://www.when2meet.com/?#####"
+                  href="https://www.when2meet.com/?31336517-jnq1K"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium underline text-blue-700"
