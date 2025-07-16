@@ -49,6 +49,8 @@ export default function MembershipWizard() {
     },
   });
 
+  console.log("Stripe key length:", process.env.STRIPE_SECRET?.length);
+  console.log("Stripe key prefix:", process.env.STRIPE_SECRET?.slice(0, 12)); // sk_live_51Rj
 
   const router = useRouter();
   const coupon = useSearchParams().get("coupon");
@@ -66,8 +68,6 @@ export default function MembershipWizard() {
 
       if (!res.ok) {
         alert("Signup failed: " + (body.error || "unknown error"));
-        console.log("Stripe key length:", process.env.STRIPE_SECRET?.length);
-        console.log("Stripe key prefix:", process.env.STRIPE_SECRET?.slice(0, 12)); // sk_live_51Rj
         return;
       }
 
