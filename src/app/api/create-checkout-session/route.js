@@ -3,8 +3,6 @@ import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 
 export async function POST(req) {
-  console.log("Stripe key length:", process.env.STRIPE_SECRET?.length);
-  console.log("Stripe key prefix:", process.env.STRIPE_SECRET?.slice(0, 12)); // sk_live_51Rj
 
   try {
     // 1️⃣ Parse incoming form data
