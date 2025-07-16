@@ -49,9 +49,6 @@ export default function MembershipWizard() {
     },
   });
 
-  console.log("Stripe key length:", process.env.STRIPE_SECRET?.length);
-  console.log("Stripe key prefix:", process.env.STRIPE_SECRET?.slice(0, 12)); // sk_live_51Rj
-
   const router = useRouter();
   const coupon = useSearchParams().get("coupon");
 
