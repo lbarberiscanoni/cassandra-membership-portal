@@ -2,14 +2,6 @@
 import { stripe } from "@/lib/stripe";
 import { supabase } from "@/lib/supabase";
 
-// Debug on module load
-console.log(
-  "⏩ NEXT_PUBLIC_BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL,
-  "⏩ STRIPE_PRICE_ID:", process.env.STRIPE_PRICE_ID,
-  "⏩ SUPABASE_URL:", process.env.NEXT_PUBLIC_SUPABASE_URL,
-  "⏩ SERVICE_KEY loaded?", !!process.env.SUPABASE_SERVICE_KEY
-);
-
 export async function POST(req) {
   try {
     // 1️⃣ Parse incoming form data
@@ -56,13 +48,16 @@ export async function POST(req) {
 
     // 3️⃣ Create Stripe Checkout session
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const urlCoupon = new URL(req.url).searchParams.get("coupon");  
     const session = await stripe.checkout.sessions.create({
-      mode:           "subscription",
+      mode: "subscription",
       customer_email: data.email,
-      line_items:     [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
-      metadata:       { supabase_id: draft.id },
-      success_url:    `${baseURL}/thanks`,
-      cancel_url:     `${baseURL}/membership?canceled=1`,
+      allow_promotion_codes: true,
+      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      metadata: { supabase_id: draft.id },
+      discounts: urlCoupon ? [{ coupon: urlCoupon }] : [],
+      success_url: `${baseURL}/thanks`,
+      cancel_url:  `${baseURL}/membership?canceled=1`,
     });
 
     console.log("→ Created Stripe session:", session.id, "redirect:", session.url);
