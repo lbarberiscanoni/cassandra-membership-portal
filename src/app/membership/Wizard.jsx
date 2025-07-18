@@ -46,6 +46,7 @@ export default function MembershipWizard() {
       meetingPref: "Watch recording",   // ← new line
       board_choice:  "David",  // you already have
       bylaws_yesno:  "yes",
+      participation: ["Regular member"]
     },
   });
 
