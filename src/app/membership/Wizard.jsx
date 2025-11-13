@@ -43,9 +43,7 @@ export default function MembershipWizard() {
   } = useForm({
     mode: "onBlur",
     defaultValues: {
-      meetingPref: "Watch recording",   // ← new line
-      board_choice:  "David",  // you already have
-      bylaws_yesno:  "yes",
+      meetingPref: "Watch recording",
       participation: ["Regular member"]
     },
   });
@@ -89,7 +87,7 @@ export default function MembershipWizard() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
           {/* ---------- 1 · IDENTITY ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">1 Identity</h2>
+            <h2 className="text-xl font-medium mb-4">1 Identity</h2>
 
             <div className="mb-4">
               <label className="block font-medium mb-1">Legal name</label>
@@ -146,7 +144,7 @@ export default function MembershipWizard() {
 
           {/* ---------- 2 · MISSION AFFIRMATION ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">2 Mission affirmation</h2>
+            <h2 className="text-xl font-medium mb-4">2 Mission affirmation</h2>
 
             <Controller
               control={control}
@@ -190,7 +188,7 @@ export default function MembershipWizard() {
 
           {/* ---------- 3 · PARTICIPATION ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-2">3 Participation areas</h2>
+            <h2 className="text-xl font-medium mb-2">3 Participation areas</h2>
 
             <p className="mb-4 text-sm text-gray-700">
               Pick any ways you might like to get involved—nothing is binding, it just
@@ -204,14 +202,14 @@ export default function MembershipWizard() {
               },
               {
                 label: "Open-source dev",
-                tip: "Contribute code, docs, or QA to Cassandra’s public-goods repos.",
+                tip: "Contribute code, docs, or QA to Cassandra's public-goods repos.",
               },
               {
                 label: "Volunteer committees",
                 tip: "Help with outreach, compliance, grants, or events.",
               },
               {
-                label: "Regular member",            // ← new option
+                label: "Regular member",
                 tip: "Stay informed and vote—no ongoing volunteer duties.",
               },
             ].map(({ label, tip }) => (
@@ -234,9 +232,8 @@ export default function MembershipWizard() {
 
           {/* ---------- 4 · MEETING PREFS ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">4 Meeting preferences</h2>
+            <h2 className="text-xl font-medium mb-4">4 Meeting preferences</h2>
 
-            {/* dropdown with Watch recording pre-selected */}
             <Controller
               control={control}
               name="meetingPref"
@@ -254,162 +251,12 @@ export default function MembershipWizard() {
               )}
             />
             <FieldErr errors={errors} name="meetingPref" />
-
-            {/* call-out box for When2Meet */}
-            <div className="mt-6 border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
-              <p className="text-sm text-gray-800">
-                <strong>Help us schedule!</strong>  Mark the times you
-                could attend the Zoom in our&nbsp;
-                <a
-                  href="https://www.when2meet.com/?31336517-jnq1K"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium underline text-blue-700"
-                >
-                  When2Meet poll
-                </a>
-                . (This takes 30 seconds and really boosts turnout.)
-              </p>
-            </div>
           </section>
 
-          {/* ---------- 5 · NOMINATIONS & AGENDA ---------- */}
-          <section className="pt-6">
-            <h2 className="text-xl font-medium mb-4">
-              5 Remote Voting &amp; Agenda Ideas
-            </h2>
-
-
-
-            {/* nominate someone else */}
-            <div className="mb-4">
-              <label className="block font-medium mb-1">
-                Vote on a Member Liason to represent you
-              </label>
-              <Controller
-                control={control}
-                name="board_choice"
-                defaultValue="David"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <>
-                    <RadioGroup
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="space-y-3"
-                    >
-                      {/* Option 1 — David */}
-                      <label className="flex items-start gap-2">
-                        <RadioGroupItem value="David" id="david" />
-                        <span>
-                          <strong>David Moore</strong>
-                          <p className="mt-1 text-gray-600 text-xs leading-snug">
-                            “As Member Liaison, I’ll be the bridge between our growing community and Cassandra’s mission to build public-good infrastructure—from open-source prediction markets to fintech tools that widen access to finance. I thrive on greeting new members, turning our charitable, educational, and scientific goals into clear first steps, and following through until everyone feels heard. When feedback rolls in, I act fast—updating docs, scheduling live Q&As, and looping in the right experts—so momentum never stalls. Empowering volunteers to contribute their best work isn’t a side task for me; it’s how I’ll keep Cassandra’s Association vibrant and moving forward.'”
-                          </p>
-                        </span>
-                      </label>
-
-                      {/* Option 2 — Write-in */}
-                      <label className="flex items-start gap-2">
-                        <RadioGroupItem value="write-in" id="writein" />
-                        <span>Write-in candidate</span>
-                      </label>
-                    </RadioGroup>
-
-                    {/* Conditional text box shows only if “write-in” selected */}
-                    {watch("board_choice") === "write-in" && (
-                      <Input
-                        className="mt-2"
-                        placeholder="Type full name"
-                        {...register("write_in", { required: "Name required" })}
-                      />
-                    )}
-                  </>
-                )}
-              />
-              <FieldErr errors={errors} name="write_in" />
-            </div>
-
-            {/* by-laws yes/no */}
-            <div className="mt-6">
-              <label className="block font-medium mb-1">
-                Ratify&nbsp;
-                <a
-                  href="https://docs.google.com/document/d/1klc3TzxREA3fRNKFsFj29u6gjFHXAOKUM8-OnpxY1Dw/edit?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline"
-                >
-                  revised by-laws
-                </a>
-                ?
-              </label>
-
-              <Controller
-                control={control}
-                name="bylaws_yesno"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select defaultValue={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Choose one" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yes">Yes – adopt</SelectItem>
-                      <SelectItem value="no">No – reject</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              <FieldErr errors={errors} name="bylaws_yesno" />
-            </div>
-
-            {/* ranked-choice agenda poll */}
-            <div className="mt-6 border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded">
-              <p className="text-sm">
-                <strong>Help prioritize our 2025 research projects&nbsp;→</strong>&nbsp;
-                Cast your ranked-choice vote in the&nbsp;
-                <a
-                  href="https://rankedchoices.com/cassandragenda"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline text-indigo-700 font-medium"
-                >
-                  Agenda Poll
-                </a>
-                . No login required—takes about 30&nbsp;seconds.
-              </p>
-            </div>
-
-            {/* questions for the founders */}
-            <div className="mt-6">
-              <label className="block font-medium mb-1">
-                Questions for Jacob &amp; Lorenzo (optional)
-              </label>
-              <Textarea
-                rows={3}
-                placeholder="Ask us anything about Cassandra. We'll answer in the Q&A"
-                {...register("member_questions")}
-              />
-            </div>  
-
-            {/* agenda / motions */}
-            <div>
-              <label className="block font-medium mb-1">
-                Agenda items or motions you’d like to propose (optional)
-              </label>
-              <Textarea
-                rows={3}
-                placeholder="Your suggestions…"
-                {...register("agendaItems")}
-              />
-            </div>
-          </section>
-
-          {/* ---------- 6 · VOTING + SIGNATURE ---------- */}
+          {/* ---------- 5 · VOTING DUTY + SIGNATURE ---------- */}
           <section>
             <h2 className="text-xl font-medium mb-4">
-              6 Voting duty & signature
+              5 Voting duty & signature
             </h2>
 
             <Controller
