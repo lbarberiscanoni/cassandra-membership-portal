@@ -307,10 +307,106 @@ export default function MembershipWizard() {
             ))}
           </section>
 
-
-          {/* ---------- 5 · MEETING PREFS ---------- */}
+          {/* ---------- 5 · CREDIT UNION INTEREST ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">5 Meeting preferences</h2>
+            <h2 className="text-xl font-medium mb-4">5 Credit union interest (optional)</h2>
+
+            <p className="mb-4 text-sm text-gray-700">
+              Cassandra Labs is exploring establishing a federal credit union to serve our
+              members. This section is optional but helps us understand member interest and
+              needs.
+            </p>
+
+            <div className="mb-4">
+              <label className="block font-medium mb-1">
+                Would you be interested in joining a Cassandra credit union?
+              </label>
+              <Controller
+                control={control}
+                name="creditUnionInterest"
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select your interest level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes, definitely interested</SelectItem>
+                      <SelectItem value="maybe">Maybe, tell me more</SelectItem>
+                      <SelectItem value="no">No, not interested</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            {(watch("creditUnionInterest") === "yes" || watch("creditUnionInterest") === "maybe") && (
+              <>
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">
+                    What products/services would you need? (select all that apply)
+                  </label>
+                  <div className="space-y-2 mt-2">
+                    {[
+                      "Savings account",
+                      "Checking account",
+                      "Vehicle loans",
+                      "Mortgage loans",
+                      "Credit cards",
+                      "Business accounts",
+                      "Other"
+                    ].map((service) => (
+                      <div key={service} className="flex items-center gap-2">
+                        <Checkbox
+                          id={service}
+                          value={service}
+                          {...register("creditUnionServices")}
+                        />
+                        <label htmlFor={service} className="text-sm">{service}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">
+                    Estimated initial deposit (optional)
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="$"
+                    {...register("initialDeposit")}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">
+                    Expected monthly deposits (optional)
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="$"
+                    {...register("monthlyDeposit")}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block font-medium mb-1">
+                    What's your most important need from a credit union?
+                  </label>
+                  <Textarea
+                    rows={2}
+                    placeholder="Your top priority..."
+                    {...register("creditUnionPriority")}
+                  />
+                </div>
+              </>
+            )}
+          </section>
+
+
+          {/* ---------- 6 · MEETING PREFS ---------- */}
+          <section>
+            <h2 className="text-xl font-medium mb-4">6 Meeting preferences</h2>
 
             <p className="mb-4 text-sm text-gray-700">
               We have a yearly meeting and quarterly presentations.
@@ -335,10 +431,10 @@ export default function MembershipWizard() {
             <FieldErr errors={errors} name="meetingPref" />
           </section>
 
-          {/* ---------- 6 · VOTING DUTY + SIGNATURE ---------- */}
+          {/* ---------- 7 · VOTING DUTY + SIGNATURE ---------- */}
           <section>
             <h2 className="text-xl font-medium mb-4">
-              6 Voting duty & signature
+              7 Voting duty & signature
             </h2>
 
             <Controller

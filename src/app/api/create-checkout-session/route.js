@@ -13,26 +13,41 @@ export async function POST(req) {
     const { data: draft, error: insertError } = await supabase
       .from("members")
       .insert({
-        email:           data.email,
-        name:            data.name,
-        street_address:  data.streetAddress,
-        phone:           data.phone || null,
-        is_adult:        data.isAdult,
-        mission:         data.mission,
-        participation: Array.isArray(data.participation)
+        email:              data.email,
+        name:               data.name,
+        street_address:     data.streetAddress,
+        phone:              data.phone || null,
+        is_adult:           data.isAdult,
+        mission:            data.mission,
+        participation:      Array.isArray(data.participation)
           ? data.participation
           : data.participation
           ? [data.participation]
           : [],
-        meeting_pref:    data.meetingPref,
-        board_choice:    data.board_choice,
-        write_in:        data.write_in || null,
-        bylaws_yesno:    data.bylaws_yesno,
-        agenda_items:    data.agendaItems || null,
-        member_questions:data.member_questions || null,
-        signature:       data.signature,
-        voting_duty:     data.votingDuty,
-        status:          "pending",
+        initiatives:        Array.isArray(data.initiatives)
+          ? data.initiatives
+          : data.initiatives
+          ? [data.initiatives]
+          : [],
+        meeting_pref:       data.meetingPref,
+        credit_union_interest: data.creditUnionInterest || null,
+        credit_union_services: Array.isArray(data.creditUnionServices)
+          ? data.creditUnionServices
+          : data.creditUnionServices
+          ? [data.creditUnionServices]
+          : [],
+        initial_deposit:    data.initialDeposit || null,
+        monthly_deposit:    data.monthlyDeposit || null,
+        credit_union_priority: data.creditUnionPriority || null,
+        signature:          data.signature,
+        voting_duty:        data.votingDuty,
+        status:             "pending",
+        // Legacy fields no longer in form - kept for schema compatibility
+        board_choice:       null,
+        write_in:           null,
+        bylaws_yesno:       null,
+        agenda_items:       null,
+        member_questions:   null,
       })
       .select()
       .single();
