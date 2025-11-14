@@ -44,7 +44,8 @@ export default function MembershipWizard() {
     mode: "onBlur",
     defaultValues: {
       meetingPref: "Watch recording",
-      participation: ["Regular member"]
+      participation: ["Regular member"],
+      initiatives: []
     },
   });
 
@@ -230,9 +231,90 @@ export default function MembershipWizard() {
           </section>
 
 
-          {/* ---------- 4 · MEETING PREFS ---------- */}
+          {/* ---------- 4 · INITIATIVE INTERESTS ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">4 Meeting preferences</h2>
+            <h2 className="text-xl font-medium mb-4">4 Initiative interests</h2>
+
+            <p className="mb-4 text-sm text-gray-700">
+              Select any initiatives you'd like to follow or contribute to. Clicking each
+              will open details in a new tab.
+            </p>
+
+            {[
+              {
+                label: "LLM Briefing of Changes in Prediction Markets",
+                url: null,
+              },
+              {
+                label: "Charity Angeling for the Synapse Victims",
+                url: "https://ringed-catsup-282.notion.site/Yotta-Summary-18223b3ffde080b68c4fe9364e2cfb21?pvs=74",
+              },
+              {
+                label: "Cassandra Legal Apprenticeship Program",
+                url: "https://ringed-catsup-282.notion.site/Legal-Apprenticeship-1da23b3ffde0808499f8c34311e1cac9?pvs=73",
+              },
+              {
+                label: "Initial Litigation Offerings",
+                url: "https://ringed-catsup-282.notion.site/Initial-Litigation-Offerings-4be9e2c37a8e440c8d6dfe1023bb75d4?pvs=74",
+              },
+              {
+                label: "Impact Certificate Exchange",
+                url: "https://ringed-catsup-282.notion.site/Impact-Certificate-Exchange-8b9ad891b8e5442daaf34838d81d8a71?pvs=74",
+              },
+              {
+                label: "BUILD Fellowship for Immigrants of Extraordinary Ability",
+                url: "https://cassandralabs.buildfellowship.com/",
+              },
+              {
+                label: "Cassandra Journal with Replication Market instead of Peer Review",
+                url: null,
+              },
+              {
+                label: "Replication Markets (Prediction Markets for Scientific Replication)",
+                url: "https://docs.google.com/document/d/11bCIUUy1WsThDB9CQBb4B0vWp0GeNgoJ/edit?usp=sharing&ouid=102842187037987242905&rtpof=true&sd=true",
+              },
+              {
+                label: "Legal Wrappers for DAOs",
+                url: "https://readwise.io/reader/shared/01hzgjexwsqb7n767n51t927a5/",
+              },
+              {
+                label: "Native-American-Reservation-as-a-Service",
+                url: "https://fortune.com/2022/07/06/crypto-regulation-tribal-land-catawba-nation-south-carolina-web-3/",
+              },
+              {
+                label: "Donor-Advised Funds as a Service",
+                url: "https://x.com/ankurnagpal/status/1818329134482780197",
+              },
+              {
+                label: "Open-Source Banking-as-a-Service Platform",
+                url: null,
+              },
+            ].map(({ label, url }) => (
+              <div key={label} className="flex items-center gap-2 mb-2">
+                <Checkbox id={label} value={label} {...register("initiatives")} />
+                <label htmlFor={label} className="font-medium text-sm">{label}</label>
+                {url && (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 text-sm underline ml-1 flex-shrink-0"
+                  >
+                    (details)
+                  </a>
+                )}
+              </div>
+            ))}
+          </section>
+
+
+          {/* ---------- 5 · MEETING PREFS ---------- */}
+          <section>
+            <h2 className="text-xl font-medium mb-4">5 Meeting preferences</h2>
+
+            <p className="mb-4 text-sm text-gray-700">
+              We have a yearly meeting and quarterly presentations.
+            </p>
 
             <Controller
               control={control}
@@ -253,10 +335,10 @@ export default function MembershipWizard() {
             <FieldErr errors={errors} name="meetingPref" />
           </section>
 
-          {/* ---------- 5 · VOTING DUTY + SIGNATURE ---------- */}
+          {/* ---------- 6 · VOTING DUTY + SIGNATURE ---------- */}
           <section>
             <h2 className="text-xl font-medium mb-4">
-              5 Voting duty & signature
+              6 Voting duty & signature
             </h2>
 
             <Controller
