@@ -9,6 +9,7 @@ export async function POST(req) {
     const missing = [];
     if (!data.name) missing.push("name");
     if (!data.email) missing.push("email");
+    if (!data.address) missing.push("address");
     if (missing.length > 0) {
       return Response.json(
         { error: `Missing required fields: ${missing.join(", ")}` },

@@ -13,8 +13,8 @@ Content-Type: application/json
 |--------------------|---------|----------|--------------------------------------------------|
 | `name`             | string  | ✅       | Member's legal name                              |
 | `email`            | string  | ✅       | Email address (used as unique identifier)        |
+| `address`          | string  | ✅       | Physical address                                 |
 | `phone`            | string  | ❌       | Phone number                                     |
-| `address`          | string  | ❌       | Physical address                                 |
 | `research_consent` | boolean | ❌       | Consented to Cassandra research participation    |
 | `source_detail`    | string  | ❌       | Settlement name, campaign, or referral tracking  |
 
@@ -26,8 +26,8 @@ curl -X POST https://your-domain.com/api/openclaims/add-member \
   -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
-    "phone": "555-0100",
     "address": "123 Main St, Berkeley, CA 94704",
+    "phone": "555-0100",
     "research_consent": true,
     "source_detail": "Disney+ $43M Settlement"
   }'
@@ -52,7 +52,10 @@ curl -X POST https://your-domain.com/api/openclaims/add-member \
 
 ### 400 Bad Request
 ```json
-{ "error": "Missing required fields: name, email" }
+{ "error": "Missing required fields: name, email, address" }
+```
+```json
+{ "error": "Invalid email format" }
 ```
 
 ### 409 Conflict (duplicate email)
@@ -75,4 +78,5 @@ curl -X POST https://your-domain.com/api/openclaims/add-member \
 - Members are tagged with `source: "openclaims"` for tracking
 - Email is normalized to lowercase and trimmed
 - Duplicate emails are rejected with a 409 containing the existing member ID
+- Default values set automatically: `participation: ["Regular member"]`, `meeting_pref: "Watch recording"`, `signature` set to member's name
 - No authentication required (to be added later)
