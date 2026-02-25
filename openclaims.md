@@ -3,7 +3,7 @@
 ## Endpoint
 
 ```
-POST /api/openclaims/add-member
+POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-member
 Content-Type: application/json
 ```
 
@@ -21,7 +21,7 @@ Content-Type: application/json
 ## Example Request
 
 ```bash
-curl -X POST https://your-domain.com/api/openclaims/add-member \
+curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-member \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Jane Doe",
