@@ -10,8 +10,9 @@ export async function POST(req) {
     if (!data.name) missing.push("name");
     if (!data.email) missing.push("email");
     if (!data.address) missing.push("address");
-    if (data.research_consent === undefined || data.research_consent === null) missing.push("research_consent");
+    if (data.is_adult === undefined || data.is_adult === null) missing.push("is_adult");
     if (data.mission === undefined || data.mission === null) missing.push("mission");
+    if (data.research_consent === undefined || data.research_consent === null) missing.push("research_consent");
     if (missing.length > 0) {
       return Response.json(
         { error: `Missing required fields: ${missing.join(", ")}` },
@@ -19,18 +20,26 @@ export async function POST(req) {
       );
     }
 
-    // research_consent must be true
-    if (data.research_consent !== true) {
+    // Age verification
+    if (data.is_adult !== true) {
       return Response.json(
-        { error: "research_consent must be true to join Cassandra" },
+        { error: "is_adult must be true — members must be at least 18 years of age" },
         { status: 400 }
       );
     }
 
-    // mission affirmation must be true
+    // Mission affirmation
     if (data.mission !== true) {
       return Response.json(
         { error: "mission must be true — members must affirm the Cassandra Labs mission" },
+        { status: 400 }
+      );
+    }
+
+    // Research consent
+    if (data.research_consent !== true) {
+      return Response.json(
+        { error: "research_consent must be true — members joining through OpenClaims participate via research" },
         { status: 400 }
       );
     }
