@@ -14,8 +14,9 @@ Content-Type: application/json
 | `name`             | string  | ✅       | Member's legal name                              |
 | `email`            | string  | ✅       | Email address (used as unique identifier)        |
 | `address`          | string  | ✅       | Physical address                                 |
+| `mission`          | boolean | ✅       | Must be `true` — affirms the Cassandra Labs mission |
+| `research_consent` | boolean | ✅       | Must be `true` — consents to Cassandra research participation |
 | `phone`            | string  | ❌       | Phone number                                     |
-| `research_consent` | boolean | ❌       | Consented to Cassandra research participation    |
 | `source_detail`    | string  | ❌       | Settlement name, campaign, or referral tracking  |
 
 ## Example Request
@@ -27,8 +28,9 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
     "name": "Jane Doe",
     "email": "jane@example.com",
     "address": "123 Main St, Berkeley, CA 94704",
-    "phone": "555-0100",
+    "mission": true,
     "research_consent": true,
+    "phone": "555-0100",
     "source_detail": "Disney+ $43M Settlement"
   }'
 ```
@@ -57,6 +59,12 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
 ```json
 { "error": "Invalid email format" }
 ```
+```json
+{ "error": "research_consent must be true to join Cassandra" }
+```
+```json
+{ "error": "mission must be true — members must affirm the Cassandra Labs mission" }
+```
 
 ### 409 Conflict (duplicate email)
 ```json
@@ -76,6 +84,7 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
 
 - Members added via this endpoint are marked `status: "active"` (dues collected by OpenClaims)
 - Members are tagged with `source: "openclaims"` for tracking
+- Both `mission` and `research_consent` must be `true` — the API rejects `false` values with a 400
 - Email is normalized to lowercase and trimmed
 - Duplicate emails are rejected with a 409 containing the existing member ID
 - Default values set automatically: `participation: ["Regular member"]`, `meeting_pref: "Watch recording"`, `signature` set to member's name

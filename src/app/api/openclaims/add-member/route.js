@@ -10,9 +10,27 @@ export async function POST(req) {
     if (!data.name) missing.push("name");
     if (!data.email) missing.push("email");
     if (!data.address) missing.push("address");
+    if (data.research_consent === undefined || data.research_consent === null) missing.push("research_consent");
+    if (data.mission === undefined || data.mission === null) missing.push("mission");
     if (missing.length > 0) {
       return Response.json(
         { error: `Missing required fields: ${missing.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    // research_consent must be true
+    if (data.research_consent !== true) {
+      return Response.json(
+        { error: "research_consent must be true to join Cassandra" },
+        { status: 400 }
+      );
+    }
+
+    // mission affirmation must be true
+    if (data.mission !== true) {
+      return Response.json(
+        { error: "mission must be true — members must affirm the Cassandra Labs mission" },
         { status: 400 }
       );
     }
@@ -58,12 +76,12 @@ export async function POST(req) {
         name:                  data.name.trim(),
         email:                 data.email.toLowerCase().trim(),
         phone:                 data.phone || null,
-        street_address:        data.address || null,
+        street_address:        data.address.trim(),
         is_adult:              true,
         mission:               true,
-        research_consent:      data.research_consent ?? false,
+        research_consent:      true,
         source:                "openclaims",
-        source_detail:         data.source_detail || null,   // e.g. settlement name or campaign
+        source_detail:         data.source_detail || null,
         participation:         ["Regular member"],
         initiatives:           [],
         meeting_pref:          "Watch recording",
@@ -72,9 +90,9 @@ export async function POST(req) {
         initial_deposit:       null,
         monthly_deposit:       null,
         credit_union_priority: null,
-        signature:             data.name.trim(),              // auto-sign with their name
+        signature:             data.name.trim(),
         voting_duty:           true,
-        status:                "active",                      // dues collected by OpenClaims
+        status:                "active",
         // Legacy fields
         board_choice:          null,
         write_in:              null,
