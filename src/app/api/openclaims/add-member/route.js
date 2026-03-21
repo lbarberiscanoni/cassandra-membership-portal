@@ -13,6 +13,7 @@ export async function POST(req) {
     if (data.is_adult === undefined || data.is_adult === null) missing.push("is_adult");
     if (data.mission === undefined || data.mission === null) missing.push("mission");
     if (data.research_consent === undefined || data.research_consent === null) missing.push("research_consent");
+    if (data.bylaws === undefined || data.bylaws === null) missing.push("bylaws");
     if (missing.length > 0) {
       return Response.json(
         { error: `Missing required fields: ${missing.join(", ")}` },
@@ -40,6 +41,14 @@ export async function POST(req) {
     if (data.research_consent !== true) {
       return Response.json(
         { error: "research_consent must be true — members joining through OpenClaims participate via research" },
+        { status: 400 }
+      );
+    }
+
+    // By-laws acknowledgment
+    if (data.bylaws !== true) {
+      return Response.json(
+        { error: "bylaws must be true — members must agree to the Cassandra by-laws" },
         { status: 400 }
       );
     }
@@ -102,10 +111,10 @@ export async function POST(req) {
         signature:             data.name.trim(),
         voting_duty:           true,
         status:                "active",
+        bylaws_yesno:          true,
         // Legacy fields
         board_choice:          null,
         write_in:              null,
-        bylaws_yesno:          null,
         agenda_items:          null,
         member_questions:      null,
       })

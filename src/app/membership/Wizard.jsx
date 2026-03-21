@@ -457,6 +457,34 @@ export default function MembershipWizard() {
             />
             <FieldErr errors={errors} name="votingDuty" />
 
+            <Controller
+              control={control}
+              name="bylaws"
+              rules={{ required: "Required" }}
+              render={({ field }) => (
+                <label className="inline-flex items-start gap-2 mt-4">
+                  <Checkbox
+                    id="bylaws"
+                    checked={field.value ?? false}
+                    onCheckedChange={field.onChange}
+                  />
+                  <span>
+                    I have read and agree to the&nbsp;
+                    <a
+                      href="https://cassandra-labs.gitbook.io/cassandra-governance/bylaws"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline"
+                    >
+                      Cassandra by-laws
+                    </a>
+                    .
+                  </span>
+                </label>
+              )}
+            />
+            <FieldErr errors={errors} name="bylaws" />
+
             <div className="mt-4">
               <label className="block font-medium mb-1">Signature</label>
               <Input

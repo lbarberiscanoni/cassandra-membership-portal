@@ -42,10 +42,10 @@ export async function POST(req) {
         signature:          data.signature,
         voting_duty:        data.votingDuty,
         status:             "pending",
+        bylaws_yesno:       data.bylaws,
         // Legacy fields no longer in form - kept for schema compatibility
         board_choice:       null,
         write_in:           null,
-        bylaws_yesno:       null,
         agenda_items:       null,
         member_questions:   null,
       })

@@ -17,6 +17,7 @@ Content-Type: application/json
 | `is_adult`         | boolean | ✅       | Must be `true` — user confirms they are 18 or older |
 | `mission`          | boolean | ✅       | Must be `true` — user has read and affirms the [Cassandra Labs mission](https://cassandralabs.org/) |
 | `research_consent` | boolean | ✅       | Must be `true` — user has read and agrees to the [Research Participation Consent](https://cassandra-labs.gitbook.io/openclaim/research-participation-consent) |
+| `bylaws`           | boolean | ✅       | Must be `true` — user has read and agrees to the [Cassandra by-laws](https://cassandra-labs.gitbook.io/cassandra-governance/bylaws) |
 | `phone`            | string  | ❌       | Phone number                                     |
 | `source_detail`    | string  | ❌       | Settlement name, campaign, or referral tracking  |
 
@@ -27,8 +28,9 @@ Before calling this endpoint, the OpenClaims UI must present the user with three
 1. **Age verification** — *"I confirm that I am at least 18 years of age."*
 2. **Mission affirmation** — A link to or summary of the [Cassandra Labs mission](https://cassandralabs.org/) with: *"I have read and support the Cassandra Labs mission."*
 3. **Research consent** — A link to the full [Research Participation Consent](https://cassandra-labs.gitbook.io/openclaim/research-participation-consent) with: *"I have read and agree to participate in Cassandra Labs research as described in the Research Participation Consent."*
+4. **By-laws acknowledgment** — A link to the [Cassandra by-laws](https://cassandra-labs.gitbook.io/cassandra-governance/bylaws) with: *"I have read and agree to the Cassandra by-laws."*
 
-All three must be affirmatively checked by the user. The API rejects requests where any value is `false` or missing.
+All four must be affirmatively checked by the user. The API rejects requests where any value is `false` or missing.
 
 **Important**: Joining Cassandra is optional. Users may continue using OpenClaims without joining the Association. These checkboxes should only appear when a user chooses to join Cassandra.
 
@@ -44,6 +46,7 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
     "is_adult": true,
     "mission": true,
     "research_consent": true,
+    "bylaws": true,
     "phone": "555-0100",
     "source_detail": "Disney+ $43M Settlement"
   }'
@@ -82,6 +85,9 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
 ```json
 { "error": "research_consent must be true — members joining through OpenClaims participate via research" }
 ```
+```json
+{ "error": "bylaws must be true — members must agree to the Cassandra by-laws" }
+```
 
 ### 409 Conflict (duplicate email)
 ```json
@@ -101,7 +107,7 @@ curl -X POST https://cassandra-membership-portal.vercel.app/api/openclaims/add-m
 
 - Members added via this endpoint are marked `status: "active"` (dues collected by OpenClaims)
 - Members are tagged with `source: "openclaims"` for tracking
-- `is_adult`, `mission`, and `research_consent` must all be `true`
+- `is_adult`, `mission`, `research_consent`, and `bylaws` must all be `true`
 - Email is normalized to lowercase and trimmed
 - Duplicate emails are rejected with a 409 containing the existing member ID
 - Default values set automatically: `participation: ["Regular member"]`, `meeting_pref: "Watch recording"`, `signature` set to member's name
