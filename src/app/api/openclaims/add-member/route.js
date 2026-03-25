@@ -1,5 +1,6 @@
 // src/app/api/openclaims/add-member/route.js
 import { supabase } from "@/lib/supabase";
+import { sendWelcomeEmail } from "@/lib/sendWelcomeEmail";
 
 export async function POST(req) {
   try {
@@ -130,6 +131,13 @@ export async function POST(req) {
     }
 
     console.log("✅ OpenClaims member created:", member.id);
+
+    // Send welcome email (non-blocking — don't fail the API if email fails)
+    try {
+      await sendWelcomeEmail({ name: member.name, email: member.email });
+    } catch (err) {
+      console.error("⚠️ Welcome email failed but member was created:", err);
+    }
 
     return Response.json(
       { ok: true, member },
