@@ -243,10 +243,14 @@ export default function PortalForm({ member }) {
               className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${
                 member.status === "active"
                   ? "bg-green-100 text-green-800"
+                  : member.status === "canceled"
+                  ? "bg-red-100 text-red-800"
+                  : member.status === "past_due"
+                  ? "bg-orange-100 text-orange-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}
             >
-              {member.status}
+              {member.status === "past_due" ? "past due" : member.status}
             </span>
             <span className="text-sm text-gray-500">
               Member since {memberSince}
@@ -468,19 +472,29 @@ export default function PortalForm({ member }) {
               })}
             </strong>
           </p>
+        ) : member.status === "canceled" ? (
+          <p className="text-sm text-gray-600 mb-4">
+            Your membership has been canceled. To rejoin,{" "}
+            <a href="/membership" className="text-blue-600 underline">
+              sign up again
+            </a>
+            .
+          </p>
         ) : (
           <p className="text-sm text-gray-500 mb-4">
             No active subscription found.
           </p>
         )}
 
-        <Button
-          variant="outline"
-          onClick={handleBilling}
-          disabled={billingLoading}
-        >
-          {billingLoading ? "Opening..." : "Manage on Stripe"}
-        </Button>
+        {member.status !== "canceled" && (
+          <Button
+            variant="outline"
+            onClick={handleBilling}
+            disabled={billingLoading}
+          >
+            {billingLoading ? "Opening..." : "Manage on Stripe"}
+          </Button>
+        )}
       </section>
     </main>
   );

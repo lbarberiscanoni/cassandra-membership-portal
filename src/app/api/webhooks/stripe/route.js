@@ -42,11 +42,69 @@ export async function POST(req) {
 
     console.log(`✅ Member ${supabaseId} activated`);
 
-    // Send welcome email (non-blocking — don't fail the webhook if email fails)
+    // Send welcome email (non-blocking)
     try {
       await sendWelcomeEmail({ name: member.name, email: member.email });
     } catch (err) {
       console.error("⚠️ Welcome email failed but member is active:", err);
+    }
+  }
+
+  if (event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object;
+    const customerId = subscription.customer;
+
+    // Look up customer email from Stripe
+    const customer = await stripe.customers.retrieve(customerId);
+    if (!customer.email) {
+      console.error("❌ No email on Stripe customer", customerId);
+      return new Response("ok", { status: 200 });
+    }
+
+    const { error: updateError } = await supabase
+      .from("members")
+      .update({ status: "canceled" })
+      .eq("email", customer.email);
+
+    if (updateError) {
+      console.error("❌ Failed to cancel member:", updateError);
+    } else {
+      console.log(`✅ Member ${customer.email} marked canceled`);
+    }
+  }
+
+  if (event.type === "customer.subscription.updated") {
+    const subscription = event.data.object;
+    const customerId = subscription.customer;
+
+    const customer = await stripe.customers.retrieve(customerId);
+    if (!customer.email) {
+      console.error("❌ No email on Stripe customer", customerId);
+      return new Response("ok", { status: 200 });
+    }
+
+    // Sync status based on subscription state
+    let newStatus = null;
+    if (subscription.status === "active") {
+      newStatus = "active";
+    } else if (
+      subscription.status === "past_due" ||
+      subscription.status === "unpaid"
+    ) {
+      newStatus = "past_due";
+    }
+
+    if (newStatus) {
+      const { error: updateError } = await supabase
+        .from("members")
+        .update({ status: newStatus })
+        .eq("email", customer.email);
+
+      if (updateError) {
+        console.error("❌ Failed to update member status:", updateError);
+      } else {
+        console.log(`✅ Member ${customer.email} status → ${newStatus}`);
+      }
     }
   }
 
