@@ -1,6 +1,7 @@
 // src/app/api/openclaims/add-member/route.js
 import { supabase } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/sendWelcomeEmail";
+import { MEETING_PREFERENCES, PARTICIPATION_OPTIONS } from "@/lib/membershipOptions";
 
 export async function POST(req) {
   try {
@@ -101,9 +102,9 @@ export async function POST(req) {
         research_consent:      true,
         source:                "openclaims",
         source_detail:         data.source_detail || null,
-        participation:         ["Regular member"],
+        participation:         [PARTICIPATION_OPTIONS[3].label],
         initiatives:           [],
-        meeting_pref:          "Watch recording",
+        meeting_pref:          MEETING_PREFERENCES[1],
         credit_union_interest: null,
         credit_union_services: [],
         initial_deposit:       null,

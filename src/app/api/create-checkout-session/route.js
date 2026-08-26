@@ -7,7 +7,29 @@ export async function POST(req) {
   try {
     // 1️⃣ Parse incoming form data
     const data = await req.json();
-    console.log("📥 Received form payload:", data);
+    const requiredFields = [
+      "email",
+      "name",
+      "streetAddress",
+      "signature",
+      "meetingPref",
+    ];
+    const missingField = requiredFields.find((field) => !data[field]);
+
+    if (
+      missingField ||
+      data.isAdult !== true ||
+      data.mission !== true ||
+      data.votingDuty !== true ||
+      data.bylaws !== true ||
+      !Array.isArray(data.participation) ||
+      data.participation.length === 0
+    ) {
+      return Response.json(
+        { error: "Please complete all required membership fields." },
+        { status: 400 }
+      );
+    }
 
     // 2️⃣ Insert draft member into Supabase
     const { data: draft, error: insertError } = await supabase
@@ -60,23 +82,19 @@ export async function POST(req) {
       });
     }
 
-    console.log("✅ Created draft member:", draft);
-
     // 3️⃣ Create Stripe Checkout session
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const urlCoupon = new URL(req.url).searchParams.get("coupon");  
+    const coupon = data.coupon || null;
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: data.email,
-      allow_promotion_codes: true,
+      allow_promotion_codes: !coupon,
       line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
       metadata: { supabase_id: draft.id },
-      discounts: urlCoupon ? [{ coupon: urlCoupon }] : [],
+      ...(coupon ? { discounts: [{ coupon }] } : {}),
       success_url: `${baseURL}/thanks`,
       cancel_url:  `${baseURL}/membership?canceled=1`,
     });
-
-    console.log("→ Created Stripe session:", session.id, "redirect:", session.url);
 
     // 4️⃣ Respond with checkout URL and new member ID
     return new Response(JSON.stringify({ url: session.url, memberId: draft.id }), {

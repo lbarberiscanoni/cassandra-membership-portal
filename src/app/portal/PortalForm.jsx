@@ -8,44 +8,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  CREDIT_UNION_SERVICES,
+  MEETING_PREFERENCES,
+  PARTICIPATION_LABELS,
+  RESEARCH_AGENDA_POLL_URL,
+} from "@/lib/membershipOptions";
+import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
-const PARTICIPATION_OPTIONS = [
-  "Research",
-  "Open-source dev",
-  "Volunteer committees",
-  "Regular member",
-];
-
-const INITIATIVE_OPTIONS = [
-  "LLM Briefing of Changes in Prediction Markets",
-  "Charity Angeling for the Synapse Victims",
-  "Cassandra Legal Apprenticeship Program",
-  "Initial Litigation Offerings",
-  "Impact Certificate Exchange",
-  "BUILD Fellowship for Immigrants of Extraordinary Ability",
-  "Cassandra Journal with Replication Market instead of Peer Review",
-  "Replication Markets (Prediction Markets for Scientific Replication)",
-  "Legal Wrappers for DAOs",
-  "Native-American-Reservation-as-a-Service",
-  "Donor-Advised Funds as a Service",
-  "Open-Source Banking-as-a-Service Platform",
-];
-
-const CREDIT_UNION_SERVICES = [
-  "Savings account",
-  "Checking account",
-  "Vehicle loans",
-  "Mortgage loans",
-  "Credit cards",
-  "Business accounts",
-  "Other",
-];
 
 function parseArray(val) {
   if (Array.isArray(val)) return val;
@@ -290,18 +264,26 @@ export default function PortalForm({ member }) {
             <CheckboxGroup
               control={control}
               name="participation"
-              options={PARTICIPATION_OPTIONS}
+              options={PARTICIPATION_LABELS}
             />
           </section>
 
           <section>
-            <h2 className="text-xl font-medium mb-4">Initiative interests</h2>
-            <CheckboxGroup
-              control={control}
-              name="initiatives"
-              options={INITIATIVE_OPTIONS}
-              labelClassName="font-medium text-sm"
-            />
+            <h2 className="text-xl font-medium mb-4">Research agenda ranking</h2>
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <p className="text-sm text-blue-900">
+                Use the external drag-and-drop ranked-choice ballot. This is the only
+                place your research ranking is recorded.
+              </p>
+              <a
+                href={RESEARCH_AGENDA_POLL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block font-medium text-blue-700 underline"
+              >
+                Open the ranked-choice ballot →
+              </a>
+            </div>
           </section>
 
           <section>
@@ -315,8 +297,11 @@ export default function PortalForm({ member }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Live Zoom">Live Zoom</SelectItem>
-                    <SelectItem value="Watch recording">Watch recording</SelectItem>
+                    {MEETING_PREFERENCES.map((preference) => (
+                      <SelectItem key={preference} value={preference}>
+                        {preference}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -324,7 +309,13 @@ export default function PortalForm({ member }) {
           </section>
 
           <section>
-            <h2 className="text-xl font-medium mb-4">Credit union interest</h2>
+            <h2 className="text-xl font-medium mb-4">
+              Pynthia Credit Union interest
+            </h2>
+            <p className="mb-4 text-sm text-gray-600">
+              Pynthia is a proposed California state-chartered credit union. This optional
+              section helps us understand member interest and needs.
+            </p>
             <div className="mb-4">
               <Controller
                 control={control}
@@ -407,8 +398,18 @@ export default function PortalForm({ member }) {
           </section>
 
           <section>
-            <h2 className="text-xl font-medium mb-3">Initiative interests</h2>
-            <TagList items={initiatives} />
+            <h2 className="text-xl font-medium mb-3">Research agenda ranking</h2>
+            <p className="text-sm text-gray-600">
+              Submit or update your ranking on the external drag-and-drop ballot.
+            </p>
+            <a
+              href={RESEARCH_AGENDA_POLL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-block font-medium text-blue-600 underline"
+            >
+              Rank the research and public-goods agenda →
+            </a>
           </section>
 
           <section>
@@ -417,7 +418,9 @@ export default function PortalForm({ member }) {
           </section>
 
           <section>
-            <h2 className="text-xl font-medium mb-3">Credit union interest</h2>
+            <h2 className="text-xl font-medium mb-3">
+              Pynthia Credit Union interest
+            </h2>
             <Field
               label="Interest level"
               value={

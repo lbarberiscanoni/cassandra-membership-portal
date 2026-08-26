@@ -20,6 +20,12 @@ import {
 } from "@/components/ui/radio-group";
 import AddressInput from "@/components/AddressInput";
 import {
+  CREDIT_UNION_SERVICES,
+  MEETING_PREFERENCES,
+  PARTICIPATION_OPTIONS,
+  RESEARCH_AGENDA_POLL_URL,
+} from "@/lib/membershipOptions";
+import {
   Select,
   SelectTrigger,
   SelectValue,
@@ -45,7 +51,8 @@ export default function MembershipWizard() {
     defaultValues: {
       meetingPref: "Watch recording",
       participation: ["Regular member"],
-      initiatives: []
+      creditUnionInterest: "",
+      creditUnionServices: [],
     },
   });
 
@@ -53,7 +60,6 @@ export default function MembershipWizard() {
   const coupon = useSearchParams().get("coupon");
 
   const onSubmit = async (data) => {
-    console.log("🔥 onSubmit called with:", data);
     try {
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
@@ -128,7 +134,7 @@ export default function MembershipWizard() {
             <Controller
               control={control}
               name="isAdult"
-              rules={{ required: "Required" }}
+              rules={{ validate: (value) => value === true || "Required" }}
               render={({ field }) => (
                 <label className="inline-flex items-center gap-2">
                   <Checkbox
@@ -150,7 +156,7 @@ export default function MembershipWizard() {
             <Controller
               control={control}
               name="mission"
-              rules={{ required: "Required" }}
+              rules={{ validate: (value) => value === true || "Required" }}
               render={({ field }) => (
                 <label className="inline-flex items-start gap-2">
                   <Checkbox
@@ -196,130 +202,92 @@ export default function MembershipWizard() {
               helps us send the right invitations and resources.
             </p>
 
-            {[
-              {
-                label: "Research",
-                tip: "Co-author papers, run experiments, peer-review drafts.",
-              },
-              {
-                label: "Open-source dev",
-                tip: "Contribute code, docs, or QA to Cassandra's public-goods repos.",
-              },
-              {
-                label: "Volunteer committees",
-                tip: "Help with outreach, compliance, grants, or events.",
-              },
-              {
-                label: "Regular member",
-                tip: "Stay informed and vote—no ongoing volunteer duties.",
-              },
-            ].map(({ label, tip }) => (
-              <div key={label} className="flex items-center gap-2 mb-2">
-                <Checkbox id={label} value={label} {...register("participation")} />
-                <label htmlFor={label} className="font-medium">{label}</label>
+            <Controller
+              control={control}
+              name="participation"
+              render={({ field }) => (
+                <>
+                  {PARTICIPATION_OPTIONS.map(({ label, tip }) => {
+                    const checked = (field.value || []).includes(label);
+                    const id = `participation-${label}`;
 
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="cursor-help text-gray-400">&#9432;</span>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs text-sm">
-                    {tip}
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            ))}
+                    return (
+                      <div key={label} className="flex items-center gap-2 mb-2">
+                        <Checkbox
+                          id={id}
+                          checked={checked}
+                          onCheckedChange={(isChecked) => {
+                            const current = field.value || [];
+                            field.onChange(
+                              isChecked
+                                ? [...current, label]
+                                : current.filter((value) => value !== label)
+                            );
+                          }}
+                        />
+                        <label htmlFor={id} className="font-medium">
+                          {label}
+                        </label>
+
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="cursor-help text-gray-400">&#9432;</span>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs text-sm">
+                            {tip}
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            />
           </section>
 
 
-          {/* ---------- 4 · INITIATIVE INTERESTS ---------- */}
+          {/* ---------- 4 · RESEARCH AGENDA ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">4 Initiative interests</h2>
+            <h2 className="text-xl font-medium mb-4">
+              4 Research agenda ranking
+            </h2>
 
-            <p className="mb-4 text-sm text-gray-700">
-              Select any initiatives you'd like to follow or contribute to. Clicking each
-              will open details in a new tab.
-            </p>
-
-            {[
-              {
-                label: "LLM Briefing of Changes in Prediction Markets",
-                url: null,
-              },
-              {
-                label: "Charity Angeling for the Synapse Victims",
-                url: "https://ringed-catsup-282.notion.site/Yotta-Summary-18223b3ffde080b68c4fe9364e2cfb21?pvs=74",
-              },
-              {
-                label: "Cassandra Legal Apprenticeship Program",
-                url: "https://ringed-catsup-282.notion.site/Legal-Apprenticeship-1da23b3ffde0808499f8c34311e1cac9?pvs=73",
-              },
-              {
-                label: "Initial Litigation Offerings",
-                url: "https://ringed-catsup-282.notion.site/Initial-Litigation-Offerings-4be9e2c37a8e440c8d6dfe1023bb75d4?pvs=74",
-              },
-              {
-                label: "Impact Certificate Exchange",
-                url: "https://ringed-catsup-282.notion.site/Impact-Certificate-Exchange-8b9ad891b8e5442daaf34838d81d8a71?pvs=74",
-              },
-              {
-                label: "BUILD Fellowship for Immigrants of Extraordinary Ability",
-                url: "https://cassandralabs.buildfellowship.com/",
-              },
-              {
-                label: "Cassandra Journal with Replication Market instead of Peer Review",
-                url: null,
-              },
-              {
-                label: "Replication Markets (Prediction Markets for Scientific Replication)",
-                url: "https://docs.google.com/document/d/11bCIUUy1WsThDB9CQBb4B0vWp0GeNgoJ/edit?usp=sharing&ouid=102842187037987242905&rtpof=true&sd=true",
-              },
-              {
-                label: "Legal Wrappers for DAOs",
-                url: "https://readwise.io/reader/shared/01hzgjexwsqb7n767n51t927a5/",
-              },
-              {
-                label: "Native-American-Reservation-as-a-Service",
-                url: "https://fortune.com/2022/07/06/crypto-regulation-tribal-land-catawba-nation-south-carolina-web-3/",
-              },
-              {
-                label: "Donor-Advised Funds as a Service",
-                url: "https://x.com/ankurnagpal/status/1818329134482780197",
-              },
-              {
-                label: "Open-Source Banking-as-a-Service Platform",
-                url: null,
-              },
-            ].map(({ label, url }) => (
-              <div key={label} className="flex items-center gap-2 mb-2">
-                <Checkbox id={label} value={label} {...register("initiatives")} />
-                <label htmlFor={label} className="font-medium text-sm">{label}</label>
-                {url && (
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 text-sm underline ml-1 flex-shrink-0"
-                  >
-                    (details)
-                  </a>
-                )}
-              </div>
-            ))}
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <h3 className="font-medium text-blue-950">
+                Rank the 2026 research and public-goods agenda
+              </h3>
+              <p className="mt-1 text-sm text-blue-900">
+                Use the external ranked-choice ballot to drag the six research areas
+                into your preferred order. This is the only place your ranking is
+                recorded. No account is required.
+              </p>
+              <a
+                href={RESEARCH_AGENDA_POLL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-block font-medium text-blue-700 underline"
+              >
+                Open the ranked-choice ballot →
+              </a>
+            </div>
           </section>
 
           {/* ---------- 5 · CREDIT UNION INTEREST ---------- */}
           <section>
-            <h2 className="text-xl font-medium mb-4">5 Credit union interest (optional)</h2>
+            <h2 className="text-xl font-medium mb-4">
+              5 Pynthia Credit Union interest (optional)
+            </h2>
 
             <p className="mb-4 text-sm text-gray-700">
-              Cassandra Labs is exploring establishing a federal credit union to serve our
-              members. This section is optional but helps us understand member interest and
-              needs.
+              Cassandra Labs expects to be an associational group in the proposed Pynthia
+              Credit Union, a California state-chartered credit union being organized to
+              serve its members. This section is optional but helps us understand member
+              interest and needs.
             </p>
 
             <div className="mb-4">
               <label className="block font-medium mb-1">
-                Would you be interested in joining a Cassandra credit union?
+                Would you be interested in joining Pynthia Credit Union?
               </label>
               <Controller
                 control={control}
@@ -346,15 +314,7 @@ export default function MembershipWizard() {
                     What products/services would you need? (select all that apply)
                   </label>
                   <div className="space-y-2 mt-2">
-                    {[
-                      "Savings account",
-                      "Checking account",
-                      "Vehicle loans",
-                      "Mortgage loans",
-                      "Credit cards",
-                      "Business accounts",
-                      "Other"
-                    ].map((service) => (
+                    {CREDIT_UNION_SERVICES.map((service) => (
                       <div key={service} className="flex items-center gap-2">
                         <Checkbox
                           id={service}
@@ -417,13 +377,16 @@ export default function MembershipWizard() {
               name="meetingPref"
               rules={{ required: "Required" }}
               render={({ field }) => (
-                <Select defaultValue={field.value} onValueChange={field.onChange}>
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose how you'll attend" />
+                    <SelectValue placeholder="Choose your preferred format" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Live Zoom">Live Zoom</SelectItem>
-                    <SelectItem value="Watch recording">Watch recording</SelectItem>
+                    {MEETING_PREFERENCES.map((preference) => (
+                      <SelectItem key={preference} value={preference}>
+                        {preference}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -434,13 +397,13 @@ export default function MembershipWizard() {
           {/* ---------- 7 · VOTING DUTY + SIGNATURE ---------- */}
           <section>
             <h2 className="text-xl font-medium mb-4">
-              7 Voting duty & signature
+              7 Membership acknowledgments & signature
             </h2>
 
             <Controller
               control={control}
               name="votingDuty"
-              rules={{ required: "Required" }}
+              rules={{ validate: (value) => value === true || "Required" }}
               render={({ field }) => (
                 <label className="inline-flex items-center gap-2 mb-2">
                   <Checkbox
@@ -449,8 +412,8 @@ export default function MembershipWizard() {
                     onCheckedChange={field.onChange}
                   />
                   <span>
-                    I understand each member has one vote and must participate in
-                    annual meetings
+                    I understand each member has one vote and must participate in at
+                    least one mission-related activity each year.
                   </span>
                 </label>
               )}
@@ -460,7 +423,7 @@ export default function MembershipWizard() {
             <Controller
               control={control}
               name="bylaws"
-              rules={{ required: "Required" }}
+              rules={{ validate: (value) => value === true || "Required" }}
               render={({ field }) => (
                 <label className="inline-flex items-start gap-2 mt-4">
                   <Checkbox
