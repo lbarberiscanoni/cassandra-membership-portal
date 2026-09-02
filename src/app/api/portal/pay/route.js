@@ -26,14 +26,18 @@ export async function POST() {
     return Response.json({ error: "No membership found" }, { status: 404 });
   }
 
-  // If a Stripe subscription already exists, updating the payment method in the
-  // billing portal is the right move — creating a new checkout would duplicate it.
+  // If a live subscription already exists, updating the payment method in the
+  // billing portal is the right move — a new checkout would duplicate it.
+  // A canceled/expired subscription is NOT live, so those members fall through
+  // to a fresh checkout below (which reactivates them via the webhook).
   const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-  if (customers.data.length > 0) {
+  const existingCustomerId = customers.data[0]?.id || null;
+
+  if (existingCustomerId) {
     const subs = await stripe.subscriptions.list({
-      customer: customers.data[0].id,
+      customer: existingCustomerId,
       status: "all",
-      limit: 5,
+      limit: 10,
     });
     const openSub = subs.data.find((s) =>
       ["active", "past_due", "unpaid", "trialing", "incomplete"].includes(s.status)
@@ -47,7 +51,11 @@ export async function POST() {
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
-    customer_email: user.email,
+    // Reuse the member's existing Stripe customer on reactivation so we don't
+    // create duplicate customers for the same email.
+    ...(existingCustomerId
+      ? { customer: existingCustomerId }
+      : { customer_email: user.email }),
     allow_promotion_codes: true,
     line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
     metadata: { supabase_id: member.id },

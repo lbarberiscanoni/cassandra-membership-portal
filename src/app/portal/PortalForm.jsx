@@ -113,11 +113,15 @@ export default function PortalForm({ member }) {
   const [subscription, setSubscription] = useState(null);
   const [subLoading, setSubLoading] = useState(true);
 
-  // Members who signed up but whose dues aren't settled yet.
+  // Members who aren't paid up. Each gets a one-click recovery button:
   // "pending"  → never completed the first checkout (no subscription).
   // "past_due" → a renewal charge failed (subscription exists, card needs fixing).
+  // "canceled" → membership lapsed (usually a failed renewal that dunning gave
+  //              up on); their profile is kept so they can reactivate in one click.
+  const canceled = member.status === "canceled";
   const duesUnpaid =
     member.status === "pending" || member.status === "past_due";
+  const needsPayment = duesUnpaid || canceled;
 
   useEffect(() => {
     fetch("/api/portal/billing")
@@ -272,17 +276,21 @@ export default function PortalForm({ member }) {
         <p className="text-sm text-red-600 mb-4">{error}</p>
       )}
 
-      {/* ──────── DUES NOT PAID: prominent recovery banner ──────── */}
-      {duesUnpaid && (
+      {/* ──────── NOT PAID UP: prominent recovery banner ──────── */}
+      {needsPayment && (
         <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-5">
           <h2 className="text-lg font-semibold text-amber-900">
             {member.status === "past_due"
               ? "Your dues payment didn't go through"
+              : canceled
+              ? "Your membership isn't active"
               : "Your membership isn't active yet"}
           </h2>
           <p className="mt-1 text-sm text-amber-900">
             {member.status === "past_due"
               ? "Your last $1.00 annual dues charge failed. Update your payment method to keep your membership active — you won't be charged twice."
+              : canceled
+              ? "Your membership lapsed after your annual dues went unpaid. We've kept your profile — reactivate anytime with a single $1.00 payment. Your info below stays exactly as it is."
               : "You're all signed up, but your one-time $1.00 annual dues haven't been paid yet. Complete payment to activate your membership."}
           </p>
           <Button
@@ -294,6 +302,8 @@ export default function PortalForm({ member }) {
               ? "Opening secure checkout…"
               : member.status === "past_due"
               ? "Update payment method"
+              : canceled
+              ? "Reactivate — pay $1"
               : "Pay $1 dues now"}
           </Button>
         </div>
@@ -534,19 +544,11 @@ export default function PortalForm({ member }) {
               })}
             </strong>
           </p>
-        ) : member.status === "canceled" ? (
+        ) : needsPayment ? (
           <p className="text-sm text-gray-600 mb-4">
-            Your membership has been canceled. To rejoin,{" "}
-            <a href="/membership" className="text-blue-600 underline">
-              sign up again
-            </a>
-            .
-          </p>
-        ) : duesUnpaid ? (
-          <p className="text-sm text-gray-600 mb-4">
-            Your dues aren't settled yet — use the{" "}
-            {member.status === "past_due" ? "Update payment method" : "Pay $1 dues now"}{" "}
-            button above to finish.
+            {canceled
+              ? "Use the Reactivate button above to restart your membership — your profile stays as-is."
+              : "Your dues aren't settled yet — use the button above to finish."}
           </p>
         ) : (
           <p className="text-sm text-gray-500 mb-4">
@@ -554,7 +556,7 @@ export default function PortalForm({ member }) {
           </p>
         )}
 
-        {member.status !== "canceled" && !duesUnpaid && (
+        {!needsPayment && (
           <Button
             variant="outline"
             onClick={handleBilling}
