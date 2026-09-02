@@ -23,15 +23,21 @@ export async function GET() {
 
   const subscriptions = await stripe.subscriptions.list({
     customer: customers.data[0].id,
-    status: "active",
-    limit: 1,
+    status: "all",
+    limit: 5,
   });
 
-  if (subscriptions.data.length === 0) {
+  // Prefer a live subscription (including ones needing attention) over a
+  // canceled one so the portal can accurately reflect past-due members.
+  const sub =
+    subscriptions.data.find((s) =>
+      ["active", "past_due", "unpaid", "trialing"].includes(s.status)
+    ) || null;
+
+  if (!sub) {
     return Response.json({ hasSubscription: false });
   }
 
-  const sub = subscriptions.data[0];
   return Response.json({
     hasSubscription: true,
     status: sub.status,

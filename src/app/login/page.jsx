@@ -8,6 +8,13 @@ export default function LoginPage() {
         Enter your email to receive a magic login link.
       </p>
       <LoginForm />
+      <p className="mt-8 text-sm text-gray-600">
+        New to Cassandra Labs?{" "}
+        <a href="/membership" className="text-blue-600 underline">
+          Become a member
+        </a>
+        .
+      </p>
     </main>
   );
 }

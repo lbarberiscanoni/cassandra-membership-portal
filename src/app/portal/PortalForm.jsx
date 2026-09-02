@@ -109,8 +109,15 @@ export default function PortalForm({ member }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [billingLoading, setBillingLoading] = useState(false);
+  const [payLoading, setPayLoading] = useState(false);
   const [subscription, setSubscription] = useState(null);
   const [subLoading, setSubLoading] = useState(true);
+
+  // Members who signed up but whose dues aren't settled yet.
+  // "pending"  → never completed the first checkout (no subscription).
+  // "past_due" → a renewal charge failed (subscription exists, card needs fixing).
+  const duesUnpaid =
+    member.status === "pending" || member.status === "past_due";
 
   useEffect(() => {
     fetch("/api/portal/billing")
@@ -194,6 +201,31 @@ export default function PortalForm({ member }) {
     }
   };
 
+  // Pay outstanding dues. Pending members get a fresh Stripe Checkout;
+  // members who already have a subscription are routed to the billing portal
+  // (to update their card) so we never create a duplicate subscription.
+  const handlePay = async () => {
+    setPayLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/portal/pay", { method: "POST" });
+      const body = await res.json();
+      if (body.useBilling) {
+        await handleBilling();
+        return;
+      }
+      if (body.url) {
+        window.location.href = body.url;
+      } else {
+        setError(body.error || "Could not start payment");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setPayLoading(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await fetch("/api/auth/signout", { method: "POST" });
     router.push("/login");
@@ -238,6 +270,33 @@ export default function PortalForm({ member }) {
 
       {error && (
         <p className="text-sm text-red-600 mb-4">{error}</p>
+      )}
+
+      {/* ──────── DUES NOT PAID: prominent recovery banner ──────── */}
+      {duesUnpaid && (
+        <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-5">
+          <h2 className="text-lg font-semibold text-amber-900">
+            {member.status === "past_due"
+              ? "Your dues payment didn't go through"
+              : "Your membership isn't active yet"}
+          </h2>
+          <p className="mt-1 text-sm text-amber-900">
+            {member.status === "past_due"
+              ? "Your last $1.00 annual dues charge failed. Update your payment method to keep your membership active — you won't be charged twice."
+              : "You're all signed up, but your one-time $1.00 annual dues haven't been paid yet. Complete payment to activate your membership."}
+          </p>
+          <Button
+            onClick={handlePay}
+            disabled={payLoading || billingLoading}
+            className="mt-4 bg-amber-600 hover:bg-amber-700"
+          >
+            {payLoading || billingLoading
+              ? "Opening secure checkout…"
+              : member.status === "past_due"
+              ? "Update payment method"
+              : "Pay $1 dues now"}
+          </Button>
+        </div>
       )}
 
       {editing ? (
@@ -483,13 +542,19 @@ export default function PortalForm({ member }) {
             </a>
             .
           </p>
+        ) : duesUnpaid ? (
+          <p className="text-sm text-gray-600 mb-4">
+            Your dues aren't settled yet — use the{" "}
+            {member.status === "past_due" ? "Update payment method" : "Pay $1 dues now"}{" "}
+            button above to finish.
+          </p>
         ) : (
           <p className="text-sm text-gray-500 mb-4">
             No active subscription found.
           </p>
         )}
 
-        {member.status !== "canceled" && (
+        {member.status !== "canceled" && !duesUnpaid && (
           <Button
             variant="outline"
             onClick={handleBilling}

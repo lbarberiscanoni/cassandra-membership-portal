@@ -87,9 +87,16 @@ export default function MembershipWizard() {
 
   return (
     <main className="mx-auto max-w-xl px-6 py-10">
-      <h1 className="text-3xl font-semibold mb-6">
+      <h1 className="text-3xl font-semibold mb-2">
         Cassandra Membership Form
       </h1>
+      <p className="mb-6 text-sm text-gray-600">
+        Already a member?{" "}
+        <a href="/login" className="text-blue-600 underline">
+          Log in
+        </a>{" "}
+        to manage your profile or pay your dues.
+      </p>
       <TooltipProvider delayDuration={250}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
           {/* ---------- 1 · IDENTITY ---------- */}
