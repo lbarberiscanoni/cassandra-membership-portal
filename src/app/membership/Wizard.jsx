@@ -292,6 +292,17 @@ export default function MembershipWizard() {
               interest and needs.
             </p>
 
+            <p className="mb-4 text-sm">
+              <a
+                href="https://ringed-catsup-282.notion.site/Pynthia-The-Million-Dollar-Wall-31123b3ffde080a9a884fffe2916fc32?pvs=74"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-blue-600 underline"
+              >
+                Learn more: Pynthia — The Million-Dollar Wall →
+              </a>
+            </p>
+
             <div className="mb-4">
               <label className="block font-medium mb-1">
                 Would you be interested in joining Pynthia Credit Union?
