@@ -267,9 +267,14 @@ export default function PortalForm({ member }) {
             </span>
           </div>
         </div>
-        <Button variant="outline" onClick={handleSignOut}>
-          Sign out
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <a href="/portal/lca">LCA Postings</a>
+          </Button>
+          <Button variant="outline" onClick={handleSignOut}>
+            Sign out
+          </Button>
+        </div>
       </div>
 
       {error && (
