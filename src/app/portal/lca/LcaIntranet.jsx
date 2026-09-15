@@ -76,7 +76,7 @@ export default function LcaIntranet({
           <p className="mt-1 max-w-2xl text-gray-600">
             Cassandra Labs BUILD Fellowship — internal electronic notices of
             filed H-1B Labor Condition Applications. Each notice must remain
-            available for <strong>10 consecutive business days</strong>;
+            available for <strong>12 consecutive business days</strong>;
             federal holidays inside the window extend it automatically.
           </p>
         </div>
@@ -279,19 +279,17 @@ function PostingCard({ posting: p, isAdmin, onChange }) {
                 variant={p.status === "active" ? "outline" : "default"}
                 disabled={busy}
                 onClick={() => {
-                  if (
-                    p.status === "active" &&
-                    !confirm(
-                      `The 10-business-day window is not complete (runs through ${fmtDate(
-                        p.window.remainsThrough
-                      )}). Confirm removal anyway?`
-                    )
-                  )
-                    return;
+                  const msg =
+                    p.status === "active"
+                      ? `Close this posting? The ${p.window.businessDaysRequired}-business-day window runs through ${fmtDate(
+                          p.window.remainsThrough
+                        )} and isn’t complete yet. Closing emails the removal notice to the compliance team.`
+                      : "Close this posting? This emails the removal notice to the compliance team.";
+                  if (!confirm(msg)) return;
                   act("confirm_removal");
                 }}
               >
-                Confirm removal
+                Close
               </Button>
             )}
             {p.removed_at && (

@@ -16,3 +16,14 @@ export function isAdminEmail(email) {
   if (!email) return false;
   return adminEmails().includes(String(email).trim().toLowerCase());
 }
+
+/**
+ * Staff/domain gate for VIEWING the LCA intranet: anyone with a
+ * @cassandralabs.org address is Cassandra Labs staff and may view postings.
+ * (Admins and members/fellows are additionally allowed by the LCA page.)
+ */
+const STAFF_DOMAIN = "cassandralabs.org";
+export function isStaffEmail(email) {
+  if (!email) return false;
+  return String(email).trim().toLowerCase().endsWith(`@${STAFF_DOMAIN}`);
+}

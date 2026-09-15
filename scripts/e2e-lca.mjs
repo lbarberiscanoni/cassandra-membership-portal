@@ -122,9 +122,9 @@ async function run() {
     return finish();
   }
   const posting = created.posting;
-  check("computed remains_through = 2026-06-01 (extended past Memorial Day)", posting.window.remainsThrough === "2026-06-01", posting.window.remainsThrough);
+  check("computed remains_through = 2026-06-03 (12 biz days, extended past Memorial Day)", posting.window.remainsThrough === "2026-06-03", posting.window.remainsThrough);
   check("Memorial Day recorded as the extension", posting.window.holidaysInWindow?.[0]?.name === "Memorial Day");
-  check("stored remains_through persisted", posting.remains_through === "2026-06-01", posting.remains_through);
+  check("stored remains_through persisted", posting.remains_through === "2026-06-03", posting.remains_through);
   check("past-dated window shows window_complete", posting.status === "window_complete", posting.status);
   check("placed confirmation timestamp present", !!posting.placed_confirmed_at);
   check("placed-notification sent to compliance team", created.notified?.ok === true, JSON.stringify(created.notified));

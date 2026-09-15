@@ -2,7 +2,8 @@
  * LCA posting compliance math.
  *
  * H-1B labor condition application (LCA) internal electronic notice must remain
- * available for 10 CONSECUTIVE BUSINESS DAYS. Weekends and U.S. federal holidays
+ * available for at least 10 CONSECUTIVE BUSINESS DAYS (Cassandra Labs posts 12 as a
+ * compliance margin). Weekends and U.S. federal holidays
  * do not count as business days, so a holiday inside the window pushes the end
  * date out by the corresponding number of calendar days.
  *
@@ -12,7 +13,9 @@
  */
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-export const BUSINESS_DAYS_REQUIRED = 10;
+// Legal minimum is 10 consecutive business days; Cassandra Labs posts 12 as a
+// compliance margin (posting longer than required is always safe).
+export const BUSINESS_DAYS_REQUIRED = 12;
 
 /* ------------------------------------------------------------------ */
 /* Date helpers (ISO 'YYYY-MM-DD' <-> UTC Date)                         */
@@ -183,7 +186,7 @@ export function computeWindow(postingDate, businessDaysRequired = BUSINESS_DAYS_
 /**
  * Status of a posting relative to a reference date.
  *  - 'active'          : still inside the required window (must stay up).
- *  - 'window_complete' : the 10-business-day window has elapsed but removal is
+ *  - 'window_complete' : the required posting window has elapsed but removal is
  *                        not yet confirmed (safe to take down).
  *  - 'removed'         : removal has been confirmed.
  *

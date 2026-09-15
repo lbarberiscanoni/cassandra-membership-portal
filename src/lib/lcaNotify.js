@@ -58,7 +58,7 @@ const EVENTS = {
     title: "LCA notice ready to remove",
     color: "#92400e",
     intro: (p) =>
-      `The 10-business-day posting window for the H-1B Labor Condition Application notice below is now <strong>complete</strong>. You may remove the notice from the intranet — please confirm removal so it can be filed in the Public Access File.`,
+      `The ${(p.window && p.window.businessDaysRequired) || 12}-business-day posting window for the H-1B Labor Condition Application notice below is now <strong>complete</strong>. You may remove the notice from the intranet — please confirm removal so it can be filed in the Public Access File.`,
   },
 };
 
@@ -66,6 +66,7 @@ function buildHtml(event, p, actor) {
   const e = EVENTS[event];
   const appUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
   const window = p.window || {};
+  const days = window.businessDaysRequired || 12;
   const holidays =
     window.holidaysInWindow && window.holidaysInWindow.length
       ? window.holidaysInWindow.map((h) => `${h.name} (${fmtDate(h.date)})`).join(", ")
@@ -77,7 +78,7 @@ function buildHtml(event, p, actor) {
     ["Worksite", p.worksite || "—"],
     ["Posted by", p.posted_by],
     ["Posting date", fmtDate(p.posting_date)],
-    ["Must remain through", `${fmtDate(window.remainsThrough || p.remains_through)} (10 business days)`],
+    ["Must remain through", `${fmtDate(window.remainsThrough || p.remains_through)} (${days} business days)`],
     ["Federal holidays in window", holidays],
   ];
   if (event === "placed") {

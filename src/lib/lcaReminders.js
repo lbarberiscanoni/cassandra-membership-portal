@@ -1,7 +1,7 @@
 /**
  * "Ready to remove" reminders.
  *
- * A posting's 10-business-day window completes by the calendar advancing, not by
+ * A posting's required posting window completes by the calendar advancing, not by
  * any in-app action, so a scheduled daily run emails the compliance team on the
  * first day each still-posted notice becomes removable (its `earliestRemoval`).
  *
